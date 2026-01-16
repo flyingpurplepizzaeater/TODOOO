@@ -1,10 +1,27 @@
+import os
 import secrets
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 BASE_DIR = Path(__file__).parent
 
-DATABASE_URL = f"sqlite+aiosqlite:///{BASE_DIR}/todo.db"
+DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite+aiosqlite:///{BASE_DIR}/todo.db")
 
-SECRET_KEY = secrets.token_urlsafe(32)
+# SECRET_KEY must be persistent across restarts to maintain user sessions
+# Generate one with: python -c "import secrets; print(secrets.token_urlsafe(32))"
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    # Fallback for development only - warns user
+    import warnings
+    warnings.warn(
+        "SECRET_KEY not set in environment! Using random key - sessions will be lost on restart. "
+        "Set SECRET_KEY in .env file for production.",
+        RuntimeWarning
+    )
+    SECRET_KEY = secrets.token_urlsafe(32)
+
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_HOURS = 24
+ACCESS_TOKEN_EXPIRE_HOURS = int(os.getenv("ACCESS_TOKEN_EXPIRE_HOURS", "24"))
