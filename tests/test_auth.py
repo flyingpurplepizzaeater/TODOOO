@@ -122,6 +122,38 @@ class TestLogin:
         assert response.status_code == 401
 
 
+class TestRateLimiting:
+    async def test_login_rate_limit(self, client: AsyncClient):
+        """Test that login is rate limited to 5 attempts per minute"""
+        for i in range(5):
+            await client.post("/auth/login", data={
+                "username": f"nonexistent{i}",
+                "password": VALID_PASSWORD
+            })
+        # 6th request should be rate limited
+        response = await client.post("/auth/login", data={
+            "username": "nonexistent6",
+            "password": VALID_PASSWORD
+        })
+        assert response.status_code == 429
+
+    async def test_register_rate_limit(self, client: AsyncClient):
+        """Test that register is rate limited to 3 attempts per minute"""
+        for i in range(3):
+            await client.post("/auth/register", json={
+                "username": f"ratelimituser{i}",
+                "email": f"ratelimit{i}@test.com",
+                "password": VALID_PASSWORD
+            })
+        # 4th request should be rate limited
+        response = await client.post("/auth/register", json={
+            "username": "ratelimituser4",
+            "email": "ratelimit4@test.com",
+            "password": VALID_PASSWORD
+        })
+        assert response.status_code == 429
+
+
 class TestMe:
     async def test_me_authenticated(self, client: AsyncClient, auth_headers):
         headers = await auth_headers("meuser", "me@test.com", VALID_PASSWORD)

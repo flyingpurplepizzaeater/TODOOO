@@ -4,12 +4,15 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from jose import JWTError, jwt
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 from config import SECRET_KEY, ALGORITHM
 from database import init_db, async_session
 from sqlalchemy import select
 from models import User, TeamMember
 from websocket import manager
 from routers import auth, teams, lists, todos
+from rate_limit import limiter
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -17,6 +20,8 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(title="Collaborative TODO", lifespan=lifespan)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
