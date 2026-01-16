@@ -69,6 +69,6 @@ async def auth_headers(create_user):
     """Factory fixture to get auth headers for a user."""
     async def _auth_headers(username: str = "testuser", email: str = "test@test.com", password: str = "password123") -> dict:
         user = await create_user(username, email, password)
-        token = create_access_token(data={"sub": user.id})
+        token = create_access_token(data={"sub": str(user.id)})
         return {"Authorization": f"Bearer {token}"}
     return _auth_headers
