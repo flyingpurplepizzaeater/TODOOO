@@ -64,6 +64,12 @@
 const token = localStorage.getItem('token');
 if (!token) window.location.href = '/login';
 
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 const teamId = window.location.pathname.split('/').pop();
 let currentListId = null;
 let ws = null;
@@ -89,8 +95,8 @@ async function loadLists() {
     const container = document.getElementById('lists-container');
     container.innerHTML = lists.map(list => `
         <li class="list-item ${list.id === currentListId ? 'active' : ''}"
-            onclick="selectList(${list.id}, '${list.name}')">
-            ${list.name}
+            onclick="selectList(${list.id}, '${escapeHtml(list.name).replace(/'/g, "\\'")}')">
+            ${escapeHtml(list.name)}
             <button class="btn-delete" onclick="event.stopPropagation(); deleteList(${list.id})">×</button>
         </li>
     `).join('') || '<li class="empty">No lists</li>';
@@ -107,8 +113,8 @@ async function loadTodos() {
         <li class="todo-item ${todo.completed ? 'completed' : ''}">
             <input type="checkbox" ${todo.completed ? 'checked' : ''}
                    onchange="toggleTodo(${todo.id})">
-            <span class="todo-title">${todo.title}</span>
-            ${todo.assignee_username ? `<span class="assignee">@${todo.assignee_username}</span>` : ''}
+            <span class="todo-title">${escapeHtml(todo.title)}</span>
+            ${todo.assignee_username ? `<span class="assignee">@${escapeHtml(todo.assignee_username)}</span>` : ''}
             ${todo.due_date ? `<span class="due-date">${new Date(todo.due_date).toLocaleDateString()}</span>` : ''}
             <button class="btn-delete" onclick="deleteTodo(${todo.id})">×</button>
         </li>

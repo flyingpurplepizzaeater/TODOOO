@@ -20,6 +20,12 @@
         {% block content %}{% endblock %}
     </main>
     <script src="/static/app.js"></script>
+    <script>
+    function logout() {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+    }
+    </script>
     {% block scripts %}{% endblock %}
 </body>
 </html>

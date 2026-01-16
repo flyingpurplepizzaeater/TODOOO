@@ -53,6 +53,12 @@
 const token = localStorage.getItem('token');
 if (!token) window.location.href = '/login';
 
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 async function loadTeams() {
     const res = await fetch('/teams', {
         headers: {'Authorization': `Bearer ${token}`}
@@ -66,8 +72,8 @@ async function loadTeams() {
     const container = document.getElementById('teams-container');
     container.innerHTML = teams.map(team => `
         <div class="team-card" onclick="window.location.href='/team/${team.id}'">
-            <h3>${team.name}</h3>
-            <p class="invite-code">Code: ${team.invite_code}</p>
+            <h3>${escapeHtml(team.name)}</h3>
+            <p class="invite-code">Code: ${escapeHtml(team.invite_code)}</p>
         </div>
     `).join('') || '<p class="empty">No teams yet. Create or join one!</p>';
 }
