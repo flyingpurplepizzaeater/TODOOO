@@ -1,0 +1,37 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.py[cod]
+*.pyo
+.pytest_cache
+*.egg-info
+.eggs
+
+# Environment
+.env
+.venv
+venv
+env
+
+# IDE
+.idea
+.vscode
+*.swp
+
+# Database (local)
+*.db
+
+# Tests
+tests/
+pytest.ini
+
+# Docs
+*.md
+docs/
+
+# Build
+dist/
+build/
