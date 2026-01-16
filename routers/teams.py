@@ -62,8 +62,7 @@ async def get_team(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    await verify_team_member(current_user.id, team_id, db)
-
+    # Check team exists first, then membership
     result = await db.execute(
         select(Team)
         .options(selectinload(Team.members).selectinload(TeamMember.user))
@@ -72,6 +71,8 @@ async def get_team(
     team = result.scalar_one_or_none()
     if not team:
         raise HTTPException(status_code=404, detail="Team not found")
+
+    await verify_team_member(current_user.id, team_id, db)
 
     # Transform to response
     members = [

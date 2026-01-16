@@ -23,7 +23,7 @@ class Team(Base):
     invite_code = Column(String(20), unique=True, index=True, default=lambda: secrets.token_urlsafe(10))
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    members = relationship("TeamMember", back_populates="team")
+    members = relationship("TeamMember", back_populates="team", cascade="all, delete-orphan")
     lists = relationship("TodoList", back_populates="team", cascade="all, delete-orphan")
 
 class TeamMember(Base):
