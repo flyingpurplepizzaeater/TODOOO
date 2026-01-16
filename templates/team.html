@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+{% block title %}Team - TODO App{% endblock %}
+{% block content %}
+<div class="team-view">
+    <div class="team-header">
+        <h1 id="team-name">Loading...</h1>
+        <div class="team-actions">
+            <button class="btn btn-secondary" onclick="showInviteModal()">Invite</button>
+            <a href="/dashboard" class="btn btn-secondary">Back</a>
+        </div>
+    </div>
+    <div class="team-content">
+        <aside class="lists-sidebar">
+            <h2>Lists</h2>
+            <ul id="lists-container"></ul>
+            <button class="btn btn-sm" onclick="createList()">+ New List</button>
+        </aside>
+        <section class="todos-section">
+            <div class="todos-header">
+                <h2 id="current-list-name">Select a list</h2>
+                <button class="btn btn-primary btn-sm" id="add-todo-btn" onclick="showAddTodoModal()" style="display:none">+ Add TODO</button>
+            </div>
+            <ul class="todos-list" id="todos-container"></ul>
+        </section>
+    </div>
+    <footer class="online-bar">
+        <span>Online: </span><span id="online-users">-</span>
+    </footer>
+</div>
+
+<!-- Invite Modal -->
+<div class="modal" id="invite-modal">
+    <div class="modal-content">
+        <h2>Invite Members</h2>
+        <p>Share this code:</p>
+        <code id="invite-code-display" class="invite-code-large">-</code>
+        <button class="btn btn-secondary" onclick="hideModals()">Close</button>
+    </div>
+</div>
+
+<!-- Add TODO Modal -->
+<div class="modal" id="add-todo-modal">
+    <div class="modal-content">
+        <h2>Add TODO</h2>
+        <form id="add-todo-form">
+            <div class="form-group">
+                <label for="todo-title">Title</label>
+                <input type="text" id="todo-title" required>
+            </div>
+            <div class="form-group">
+                <label for="todo-due">Due Date (optional)</label>
+                <input type="date" id="todo-due">
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="hideModals()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+const token = localStorage.getItem('token');
+if (!token) window.location.href = '/login';
+
+const teamId = window.location.pathname.split('/').pop();
+let currentListId = null;
+let ws = null;
+
+async function loadTeam() {
+    const res = await fetch(`/teams/${teamId}`, {
+        headers: {'Authorization': `Bearer ${token}`}
+    });
+    if (!res.ok) {
+        window.location.href = '/dashboard';
+        return;
+    }
+    const team = await res.json();
+    document.getElementById('team-name').textContent = team.name;
+    document.getElementById('invite-code-display').textContent = team.invite_code;
+}
+
+async function loadLists() {
+    const res = await fetch(`/teams/${teamId}/lists`, {
+        headers: {'Authorization': `Bearer ${token}`}
+    });
+    const lists = await res.json();
+    const container = document.getElementById('lists-container');
+    container.innerHTML = lists.map(list => `
+        <li class="list-item ${list.id === currentListId ? 'active' : ''}"
+            onclick="selectList(${list.id}, '${list.name}')">
+            ${list.name}
+            <button class="btn-delete" onclick="event.stopPropagation(); deleteList(${list.id})">×</button>
+        </li>
+    `).join('') || '<li class="empty">No lists</li>';
+}
+
+async function loadTodos() {
+    if (!currentListId) return;
+    const res = await fetch(`/lists/${currentListId}/todos`, {
+        headers: {'Authorization': `Bearer ${token}`}
+    });
+    const todos = await res.json();
+    const container = document.getElementById('todos-container');
+    container.innerHTML = todos.map(todo => `
+        <li class="todo-item ${todo.completed ? 'completed' : ''}">
+            <input type="checkbox" ${todo.completed ? 'checked' : ''}
+                   onchange="toggleTodo(${todo.id})">
+            <span class="todo-title">${todo.title}</span>
+            ${todo.assignee_username ? `<span class="assignee">@${todo.assignee_username}</span>` : ''}
+            ${todo.due_date ? `<span class="due-date">${new Date(todo.due_date).toLocaleDateString()}</span>` : ''}
+            <button class="btn-delete" onclick="deleteTodo(${todo.id})">×</button>
+        </li>
+    `).join('') || '<li class="empty">No todos in this list</li>';
+}
+
+function selectList(listId, listName) {
+    currentListId = listId;
+    document.getElementById('current-list-name').textContent = listName;
+    document.getElementById('add-todo-btn').style.display = 'block';
+    document.querySelectorAll('.list-item').forEach(el => el.classList.remove('active'));
+    event.target.closest('.list-item')?.classList.add('active');
+    loadTodos();
+}
+
+async function createList() {
+    const name = prompt('List name:');
+    if (!name) return;
+    await fetch(`/teams/${teamId}/lists`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({name})
+    });
+    loadLists();
+}
+
+async function deleteList(listId) {
+    if (!confirm('Delete this list?')) return;
+    await fetch(`/lists/${listId}`, {
+        method: 'DELETE',
+        headers: {'Authorization': `Bearer ${token}`}
+    });
+    if (currentListId === listId) {
+        currentListId = null;
+        document.getElementById('current-list-name').textContent = 'Select a list';
+        document.getElementById('add-todo-btn').style.display = 'none';
+        document.getElementById('todos-container').innerHTML = '';
+    }
+    loadLists();
+}
+
+async function toggleTodo(todoId) {
+    await fetch(`/todos/${todoId}/toggle`, {
+        method: 'PATCH',
+        headers: {'Authorization': `Bearer ${token}`}
+    });
+}
+
+async function deleteTodo(todoId) {
+    await fetch(`/todos/${todoId}`, {
+        method: 'DELETE',
+        headers: {'Authorization': `Bearer ${token}`}
+    });
+}
+
+function showInviteModal() {
+    document.getElementById('invite-modal').classList.add('active');
+}
+
+function showAddTodoModal() {
+    document.getElementById('add-todo-modal').classList.add('active');
+}
+
+function hideModals() {
+    document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+}
+
+document.getElementById('add-todo-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = document.getElementById('todo-title').value;
+    const due = document.getElementById('todo-due').value;
+
+    await fetch(`/lists/${currentListId}/todos`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            title,
+            due_date: due || null
+        })
+    });
+
+    document.getElementById('todo-title').value = '';
+    document.getElementById('todo-due').value = '';
+    hideModals();
+});
+
+// WebSocket connection
+function connectWebSocket() {
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    ws = new WebSocket(`${wsProtocol}//${window.location.host}/ws/teams/${teamId}?token=${token}`);
+
+    ws.onmessage = (event) => {
+        const msg = JSON.parse(event.data);
+        switch (msg.event) {
+            case 'online_users':
+                document.getElementById('online-users').textContent =
+                    msg.data.users.map(u => u.username).join(', ');
+                break;
+            case 'member_online':
+                document.getElementById('online-users').textContent += `, ${msg.data.username}`;
+                break;
+            case 'member_offline':
+                const online = document.getElementById('online-users').textContent;
+                document.getElementById('online-users').textContent =
+                    online.split(', ').filter(u => u !== msg.data.username).join(', ');
+                break;
+            case 'todo_created':
+            case 'todo_updated':
+            case 'todo_deleted':
+                if (currentListId === msg.data.list_id) loadTodos();
+                break;
+            case 'list_created':
+            case 'list_deleted':
+                loadLists();
+                break;
+        }
+    };
+
+    ws.onclose = () => setTimeout(connectWebSocket, 3000);
+}
+
+loadTeam();
+loadLists();
+connectWebSocket();
+</script>
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - TODO App{% endblock %}
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header">
+        <h1>My Teams</h1>
+        <div class="dashboard-actions">
+            <button class="btn btn-primary" onclick="showCreateTeamModal()">+ Create Team</button>
+            <button class="btn btn-secondary" onclick="showJoinTeamModal()">Join Team</button>
+        </div>
+    </div>
+    <div class="teams-grid" id="teams-container">
+        <!-- Teams loaded dynamically -->
+    </div>
+</div>
+
+<!-- Create Team Modal -->
+<div class="modal" id="create-team-modal">
+    <div class="modal-content">
+        <h2>Create Team</h2>
+        <form id="create-team-form">
+            <div class="form-group">
+                <label for="team-name">Team Name</label>
+                <input type="text" id="team-name" required>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="hideModals()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Join Team Modal -->
+<div class="modal" id="join-team-modal">
+    <div class="modal-content">
+        <h2>Join Team</h2>
+        <form id="join-team-form">
+            <div class="form-group">
+                <label for="invite-code">Invite Code</label>
+                <input type="text" id="invite-code" required>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="hideModals()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Join</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+const token = localStorage.getItem('token');
+if (!token) window.location.href = '/login';
+
+async function loadTeams() {
+    const res = await fetch('/teams', {
+        headers: {'Authorization': `Bearer ${token}`}
+    });
+    if (res.status === 401) {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+        return;
+    }
+    const teams = await res.json();
+    const container = document.getElementById('teams-container');
+    container.innerHTML = teams.map(team => `
+        <div class="team-card" onclick="window.location.href='/team/${team.id}'">
+            <h3>${team.name}</h3>
+            <p class="invite-code">Code: ${team.invite_code}</p>
+        </div>
+    `).join('') || '<p class="empty">No teams yet. Create or join one!</p>';
+}
+
+function showCreateTeamModal() {
+    document.getElementById('create-team-modal').classList.add('active');
+}
+
+function showJoinTeamModal() {
+    document.getElementById('join-team-modal').classList.add('active');
+}
+
+function hideModals() {
+    document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+}
+
+document.getElementById('create-team-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('team-name').value;
+    await fetch('/teams', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({name})
+    });
+    hideModals();
+    loadTeams();
+});
+
+document.getElementById('join-team-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const invite_code = document.getElementById('invite-code').value;
+    const res = await fetch('/teams/join', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({invite_code})
+    });
+    if (res.ok) {
+        hideModals();
+        loadTeams();
+    } else {
+        alert('Invalid invite code');
+    }
+});
+
+loadTeams();
+</script>
+{% endblock %}
