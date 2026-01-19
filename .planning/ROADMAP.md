@@ -30,10 +30,10 @@ CollabBoard delivers a collaborative TODO and whiteboard application. The roadma
 **Plans:** 4 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Database models (Board, BoardPermission, AuditLog) and migrations
-- [ ] 01-02-PLAN.md — Custom CRDT persistence layer for Y.Doc state
-- [ ] 01-03-PLAN.md — Room manager and WebSocket endpoint for Yjs sync
-- [ ] 01-04-PLAN.md — REST endpoints for board management and sharing
+- [x] 01-01-PLAN.md — Database models (Board, BoardPermission, AuditLog) and migrations
+- [x] 01-02-PLAN.md — Custom CRDT persistence layer for Y.Doc state
+- [x] 01-03-PLAN.md — Room manager and WebSocket endpoint for Yjs sync
+- [x] 01-04-PLAN.md — REST endpoints for board management and sharing
 
 ---
 
@@ -187,7 +187,7 @@ Plans:
 
 | Phase | Name | Requirements | Status |
 |-------|------|--------------|--------|
-| 1 | Real-Time Infrastructure | SYNC-03, SYNC-04, SYNC-05 | Planned (4 plans) |
+| 1 | Real-Time Infrastructure | SYNC-03, SYNC-04, SYNC-05 | ✓ Complete |
 | 2 | Canvas Foundation | CANV-01, CANV-02, CANV-04, PLAT-01 | Not Started |
 | 3 | Drawing Tools | CANV-03, DRAW-01, DRAW-02, DRAW-03, DRAW-04 | Not Started |
 | 4 | Notes & Text | TEXT-01, TEXT-02, TEXT-03 | Not Started |
@@ -221,4 +221,4 @@ Phase 8: Mobile Platform (depends on 2-6 stable)
 ---
 
 *Roadmap created: 2026-01-19*
-*Last updated: 2026-01-19*
+*Last updated: 2026-01-20*
