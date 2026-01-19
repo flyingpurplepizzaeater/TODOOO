@@ -56,14 +56,16 @@ class BoardPersistence:
         """
         Save compacted Y.Doc state to database.
 
-        Stores full state vector, not incremental updates.
-        This prevents unbounded growth of the state table.
+        Uses get_update() to store the full document state as a single binary.
+        This is the compacted representation suitable for persistence.
 
         Args:
             board_id: The board UUID
             ydoc: The Y.Doc to persist
         """
-        state = ydoc.get_state()
+        # get_update() returns binary that can be applied to reconstruct the doc
+        # This is more compact than logging individual updates
+        state = ydoc.get_update()
 
         async with async_session() as session:
             # Upsert: insert or replace existing state
