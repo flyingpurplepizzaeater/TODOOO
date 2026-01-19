@@ -121,3 +121,43 @@ class TodoResponse(BaseModel):
 class WSEvent(BaseModel):
     event: str
     data: dict
+
+
+# Boards
+class BoardCreate(BaseModel):
+    title: str = "Untitled Board"
+    is_public: bool = False
+
+
+class BoardResponse(BaseModel):
+    id: str
+    owner_id: int
+    title: str
+    is_public: bool
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class BoardPermissionCreate(BaseModel):
+    user_id: Optional[int] = None  # None for public permission
+    level: str = Field(..., pattern="^(view|comment|edit)$")
+
+
+class BoardPermissionResponse(BaseModel):
+    id: int
+    board_id: str
+    user_id: Optional[int]
+    level: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class ShareLinkResponse(BaseModel):
+    board_id: str
+    url: str
+    permission_level: str
+    is_public: bool
