@@ -1,8 +1,16 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Text
+from enum import Enum as PyEnum
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Text, Enum, UniqueConstraint
 from sqlalchemy.orm import relationship
 from database import Base
 import secrets
+
+
+class PermissionLevel(str, PyEnum):
+    """Permission levels for board access."""
+    VIEW = "view"
+    COMMENT = "comment"
+    EDIT = "edit"
 
 class User(Base):
     __tablename__ = "users"
@@ -62,3 +70,48 @@ class TodoItem(Base):
 
     list = relationship("TodoList", back_populates="items")
     assignee = relationship("User", foreign_keys=[assigned_to])
+
+
+class Board(Base):
+    __tablename__ = "boards"
+
+    id = Column(String(36), primary_key=True)  # UUID stored as string for SQLite compatibility
+    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    title = Column(String(200), nullable=False, default="Untitled Board")
+    is_public = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    owner = relationship("User")
+    permissions = relationship("BoardPermission", back_populates="board", cascade="all, delete-orphan")
+
+
+class BoardPermission(Base):
+    __tablename__ = "board_permissions"
+    __table_args__ = (
+        UniqueConstraint('board_id', 'user_id', name='uq_board_user_permission'),
+    )
+
+    id = Column(Integer, primary_key=True, index=True)
+    board_id = Column(String(36), ForeignKey("boards.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)  # NULL for public access
+    level = Column(Enum(PermissionLevel), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    board = relationship("Board", back_populates="permissions")
+    user = relationship("User")
+
+
+class AuditLog(Base):
+    __tablename__ = "audit_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)  # NULL for anonymous
+    board_id = Column(String(36), ForeignKey("boards.id"), nullable=False)
+    action = Column(String(50), nullable=False)  # "access", "permission_change", "create", "delete"
+    permission_level = Column(String(20), nullable=True)
+    ip_address = Column(String(45), nullable=True)  # IPv6 length
+    user_agent = Column(String(500), nullable=True)
+    timestamp = Column(DateTime, default=datetime.utcnow, index=True)
+
+    user = relationship("User")
+    board = relationship("Board")
