@@ -104,39 +104,39 @@ Explicitly excluded from this project:
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CANV-01 | TBD | Pending |
-| CANV-02 | TBD | Pending |
-| CANV-03 | TBD | Pending |
-| CANV-04 | TBD | Pending |
-| DRAW-01 | TBD | Pending |
-| DRAW-02 | TBD | Pending |
-| DRAW-03 | TBD | Pending |
-| DRAW-04 | TBD | Pending |
-| TEXT-01 | TBD | Pending |
-| TEXT-02 | TBD | Pending |
-| TEXT-03 | TBD | Pending |
-| SYNC-01 | TBD | Pending |
-| SYNC-02 | TBD | Pending |
-| SYNC-03 | TBD | Pending |
-| SYNC-04 | TBD | Pending |
-| SYNC-05 | TBD | Pending |
-| TODO-01 | TBD | Pending |
-| TODO-02 | TBD | Pending |
-| TODO-03 | TBD | Pending |
-| TODO-04 | TBD | Pending |
-| FILE-01 | TBD | Pending |
-| FILE-02 | TBD | Pending |
-| FILE-03 | TBD | Pending |
-| PLAT-01 | TBD | Pending |
-| PLAT-02 | TBD | Pending |
-| PLAT-03 | TBD | Pending |
-| PLAT-04 | TBD | Pending |
+| CANV-01 | Phase 2 | Pending |
+| CANV-02 | Phase 2 | Pending |
+| CANV-03 | Phase 3 | Pending |
+| CANV-04 | Phase 2 | Pending |
+| DRAW-01 | Phase 3 | Pending |
+| DRAW-02 | Phase 3 | Pending |
+| DRAW-03 | Phase 3 | Pending |
+| DRAW-04 | Phase 3 | Pending |
+| TEXT-01 | Phase 4 | Pending |
+| TEXT-02 | Phase 4 | Pending |
+| TEXT-03 | Phase 4 | Pending |
+| SYNC-01 | Phase 7 | Pending |
+| SYNC-02 | Phase 7 | Pending |
+| SYNC-03 | Phase 1 | Pending |
+| SYNC-04 | Phase 1 | Pending |
+| SYNC-05 | Phase 1 | Pending |
+| TODO-01 | Phase 5 | Pending |
+| TODO-02 | Phase 5 | Pending |
+| TODO-03 | Phase 5 | Pending |
+| TODO-04 | Phase 5 | Pending |
+| FILE-01 | Phase 6 | Pending |
+| FILE-02 | Phase 6 | Pending |
+| FILE-03 | Phase 6 | Pending |
+| PLAT-01 | Phase 2 | Pending |
+| PLAT-02 | Phase 8 | Pending |
+| PLAT-03 | Phase 8 | Pending |
+| PLAT-04 | Phase 8 | Pending |
 
 **Coverage:**
 - v1 requirements: 27 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 27
+- Mapped to phases: 27
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-01-19*
-*Last updated: 2026-01-19 after initial definition*
+*Last updated: 2026-01-19 after roadmap creation*
