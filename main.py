@@ -13,11 +13,19 @@ from models import User, TeamMember
 from websocket import manager
 from routers import auth, teams, lists, todos
 from rate_limit import limiter
+from canvas import BoardPersistence, RoomManager, handle_canvas_websocket
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
+    # Initialize canvas room manager
+    persistence = BoardPersistence(debounce_seconds=5.0)
+    room_manager = RoomManager(persistence)
+    await room_manager.start()
+    app.state.room_manager = room_manager
     yield
+    # Cleanup on shutdown
+    await room_manager.stop()
 
 app = FastAPI(title="Collaborative TODO", lifespan=lifespan)
 app.state.limiter = limiter
@@ -98,6 +106,30 @@ async def websocket_endpoint(
     except WebSocketDisconnect:
         manager.disconnect(websocket, team_id, user_id, user.username)
         await manager.broadcast_offline(team_id, user_id, user.username)
+
+
+@app.websocket("/ws/canvas/{board_id}")
+async def canvas_websocket_endpoint(
+    websocket: WebSocket,
+    board_id: str,
+    token: str = Query(...)
+):
+    """
+    WebSocket endpoint for canvas CRDT synchronization.
+
+    Implements Yjs sync protocol for real-time collaborative editing.
+    Requires JWT token and board access permission.
+
+    SYNC-05 compliance: Every connection receives full current state,
+    enabling seamless reconnection after network issues.
+    """
+    await handle_canvas_websocket(
+        websocket,
+        board_id,
+        token,
+        websocket.app.state.room_manager
+    )
+
 
 if __name__ == "__main__":
     import uvicorn
