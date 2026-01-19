@@ -27,7 +27,13 @@ CollabBoard delivers a collaborative TODO and whiteboard application. The roadma
 3. Board can be accessed via shareable URL with appropriate team/public permissions
 4. CRDT state persists to database and survives server restart
 
-**Research Notes:** May need deeper research on pycrdt-websocket room lifecycle and persistence patterns.
+**Plans:** 4 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Database models (Board, BoardPermission, AuditLog) and migrations
+- [ ] 01-02-PLAN.md — Custom CRDT persistence layer for Y.Doc state
+- [ ] 01-03-PLAN.md — Room manager and WebSocket endpoint for Yjs sync
+- [ ] 01-04-PLAN.md — REST endpoints for board management and sharing
 
 ---
 
@@ -181,7 +187,7 @@ CollabBoard delivers a collaborative TODO and whiteboard application. The roadma
 
 | Phase | Name | Requirements | Status |
 |-------|------|--------------|--------|
-| 1 | Real-Time Infrastructure | SYNC-03, SYNC-04, SYNC-05 | Not Started |
+| 1 | Real-Time Infrastructure | SYNC-03, SYNC-04, SYNC-05 | Planned (4 plans) |
 | 2 | Canvas Foundation | CANV-01, CANV-02, CANV-04, PLAT-01 | Not Started |
 | 3 | Drawing Tools | CANV-03, DRAW-01, DRAW-02, DRAW-03, DRAW-04 | Not Started |
 | 4 | Notes & Text | TEXT-01, TEXT-02, TEXT-03 | Not Started |
