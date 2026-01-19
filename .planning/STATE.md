@@ -11,13 +11,13 @@
 ## Current Position
 
 **Phase:** 1 - Real-Time Infrastructure
-**Plan:** 2 of 4 complete
+**Plan:** 3 of 4 complete
 **Status:** In Progress
-**Last activity:** 2026-01-20 - Completed 01-02-PLAN.md (CRDT Persistence)
+**Last activity:** 2026-01-20 - Completed 01-03-PLAN.md (WebSocket Server)
 
 ```
-[######....] Plan 2/4 in Phase 1
-[=========>....................] Phase 1 of 8
+[########..] Plan 3/4 in Phase 1
+[============>.................] Phase 1 of 8
 ```
 
 **Requirements in scope:**
@@ -37,8 +37,8 @@
 |--------|-------|
 | Phases completed | 0/8 |
 | Requirements done | 0/27 |
-| Current phase progress | 50% |
-| Plans completed this phase | 2/4 |
+| Current phase progress | 75% |
+| Plans completed this phase | 3/4 |
 
 ## Accumulated Context
 
@@ -54,12 +54,14 @@
 | UniqueConstraint in create_table | SQLite doesn't support ALTER ADD CONSTRAINT | 2026-01-20 |
 | get_update() for CRDT persistence | get_state() returns metadata only, get_update() returns full document | 2026-01-20 |
 | Raw SQL for board_states | Simple key-value BLOB storage, no ORM needed | 2026-01-20 |
+| 30 min room inactivity timeout | Balances memory usage with room reload cost | 2026-01-20 |
+| Permission-aware WebSocket updates | View/comment receive but can't send; edit required for mutations | 2026-01-20 |
 
 ### Research Flags
 
 | Phase | Topic | Status |
 |-------|-------|--------|
-| 1 | pycrdt-websocket room lifecycle | Pending |
+| 1 | pycrdt-websocket room lifecycle | Complete - custom RoomManager implemented |
 | 2 | tldraw Yjs integration specifics | Pending |
 | 8 | iOS canvas memory limits | Pending |
 
@@ -79,16 +81,19 @@ None currently.
 
 ## Session Continuity
 
-**Last session:** 2026-01-20 - Completed Plan 01-02 (CRDT Persistence)
-**Next action:** Execute Plan 01-03 (WebSocket Server)
+**Last session:** 2026-01-20 - Completed Plan 01-03 (WebSocket Server)
+**Next action:** Execute Plan 01-04 (Board CRUD and Sharing APIs)
 
 **Context for next session:**
 - Board, BoardPermission, AuditLog models exist in models.py
 - Pydantic schemas for board operations exist in schemas.py
 - Alembic migrations 001-003 applied - all tables exist
 - BoardPersistence class available in canvas/persistence.py
-- pycrdt and pycrdt-websocket dependencies installed
-- Ready to implement WebSocket server with room lifecycle
+- RoomManager class in canvas/room_manager.py with lazy loading and inactivity cleanup
+- WebSocket handler in canvas/websocket_handler.py with JWT auth and permission checks
+- Canvas WebSocket endpoint at /ws/canvas/{board_id} in main.py
+- SYNC-05 auto-reconnection supported via full state sync on connection
+- Ready to implement Board CRUD APIs and sharing functionality
 
 ---
 
