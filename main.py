@@ -11,7 +11,7 @@ from database import init_db, async_session
 from sqlalchemy import select
 from models import User, TeamMember
 from websocket import manager
-from routers import auth, teams, lists, todos
+from routers import auth, teams, lists, todos, boards
 from rate_limit import limiter
 from canvas import BoardPersistence, RoomManager, handle_canvas_websocket
 
@@ -40,6 +40,7 @@ app.include_router(auth.router)
 app.include_router(teams.router)
 app.include_router(lists.router)
 app.include_router(todos.router)
+app.include_router(boards.router)
 
 # Page routes
 @app.get("/")
