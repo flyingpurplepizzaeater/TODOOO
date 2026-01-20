@@ -86,6 +86,13 @@ Plans:
 4. User can select from at least 8 distinct colors before drawing
 5. User can choose between at least 3 stroke widths that are visibly different
 
+**Plans:** 3 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Global style configuration (stroke widths, color palette)
+- [ ] 03-02-PLAN.md — Custom toolbar (bottom-center, auto-hide, pin toggle)
+- [ ] 03-03-PLAN.md — Tool shortcuts and default tool configuration
+
 ---
 
 ## Phase 4: Notes & Text
@@ -195,7 +202,7 @@ Plans:
 |-------|------|--------------|--------|
 | 1 | Real-Time Infrastructure | SYNC-03, SYNC-04, SYNC-05 | Complete |
 | 2 | Canvas Foundation | CANV-01, CANV-02, CANV-04, PLAT-01 | Complete |
-| 3 | Drawing Tools | CANV-03, DRAW-01, DRAW-02, DRAW-03, DRAW-04 | Not Started |
+| 3 | Drawing Tools | CANV-03, DRAW-01, DRAW-02, DRAW-03, DRAW-04 | Planned |
 | 4 | Notes & Text | TEXT-01, TEXT-02, TEXT-03 | Not Started |
 | 5 | TODO Integration | TODO-01, TODO-02, TODO-03, TODO-04 | Not Started |
 | 6 | File Handling | FILE-01, FILE-02, FILE-03 | Not Started |
@@ -227,4 +234,4 @@ Phase 8: Mobile Platform (depends on 2-6 stable)
 ---
 
 *Roadmap created: 2026-01-19*
-*Last updated: 2026-01-20 after Phase 2 completion*
+*Last updated: 2026-01-20 after Phase 3 planning*
