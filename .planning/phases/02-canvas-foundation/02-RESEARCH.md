@@ -557,8 +557,39 @@ function handleMount(editor: Editor) {
 ### Open Questions
 
 1. Ctrl+scroll-only zoom may need custom event handling
-2. Per-user undo requires stakeholder discussion - may need to descope
+2. ~~Per-user undo requires stakeholder discussion~~ **RESOLVED: Use Yjs UndoManager**
 3. pycrdt document structure needs validation with actual testing
+
+### Per-User Undo Solution (Follow-up Research)
+
+**Decision:** Use Yjs UndoManager with `trackedOrigins` scoped to client ID.
+
+**Approach:**
+```typescript
+const clientId = doc.clientID // Unique per client
+
+const undoManager = new Y.UndoManager(yShapes, {
+  trackedOrigins: new Set([clientId]),
+  captureTimeout: 500
+})
+
+// Making tracked changes
+doc.transact(() => {
+  yShapes.push([shapeData])
+}, clientId)
+
+// Override keyboard shortcuts to use Yjs UndoManager
+// Ctrl+Z → undoManager.undo()
+// Ctrl+Shift+Z → undoManager.redo()
+```
+
+**Key points:**
+- Each client instantiates its own UndoManager scoped to their clientId
+- Must override tldraw's Ctrl+Z/Y shortcuts to call Yjs UndoManager instead
+- All local mutations must include clientId as transaction origin
+- This is the pattern used by y-excalidraw and recommended by Yjs docs
+
+**Confidence:** MEDIUM-HIGH (proven pattern, but requires careful integration with tldraw store)
 
 ### Ready for Planning
 
