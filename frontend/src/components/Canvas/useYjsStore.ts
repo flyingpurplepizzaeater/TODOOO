@@ -1,10 +1,21 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createTLStore, defaultShapeUtils, TLRecord, TLStoreWithStatus } from 'tldraw'
 import * as Y from 'yjs'
 import { YKeyValue } from 'y-utility/y-keyvalue'
 import { createYjsProvider } from '../../lib/yjs/provider'
 
 export type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'error'
+
+/**
+ * Return type for useYjsStore hook.
+ * Includes doc and yArr refs for UndoManager integration.
+ */
+export interface YjsStoreResult {
+  store: TLStoreWithStatus
+  status: ConnectionStatus
+  doc: Y.Doc | null
+  yArr: Y.Array<{ key: string; val: TLRecord }> | null
+}
 
 /**
  * Custom hook that creates a tldraw store synced with Yjs.
@@ -17,25 +28,32 @@ export type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'er
  * - Uses YKeyValue instead of Y.Map (prevents unbounded memory growth)
  * - Uses mergeRemoteChanges() to prevent echo loops
  * - Filters store.listen with { source: 'user' } to ignore remote changes
+ * - Passes clientId as transaction origin for per-user undo tracking
  *
  * @param boardId - The board UUID to sync
  * @param token - JWT token for authentication
- * @returns Object with tldraw store and connection status
+ * @returns Object with tldraw store, connection status, doc, and yArr for UndoManager
  */
-export function useYjsStore(boardId: string, token: string): {
-  store: TLStoreWithStatus
-  status: ConnectionStatus
-} {
+export function useYjsStore(boardId: string, token: string): YjsStoreResult {
   const [store] = useState(() => createTLStore({ shapeUtils: defaultShapeUtils }))
   const [status, setStatus] = useState<ConnectionStatus>('connecting')
 
+  // Refs for UndoManager access - these are exposed for per-user undo/redo
+  const docRef = useRef<Y.Doc | null>(null)
+  const yArrRef = useRef<Y.Array<{ key: string; val: TLRecord }> | null>(null)
+
   useEffect(() => {
     const { doc, provider } = createYjsProvider(boardId, token)
+    docRef.current = doc
+
+    // Get clientId for transaction origins (enables per-user undo)
+    const clientId = doc.clientID
 
     // Use Y.Array with YKeyValue for tldraw records
     // YKeyValue prevents unbounded growth that occurs with Y.Map
     // Each entry is { key: string, val: TLRecord }
     const yArr = doc.getArray<{ key: string; val: TLRecord }>('tldraw')
+    yArrRef.current = yArr
     const yStore = new YKeyValue(yArr)
 
     // Track if we're applying remote changes (to prevent echo loops)
@@ -45,12 +63,15 @@ export function useYjsStore(boardId: string, token: string): {
      * Sync Yjs -> tldraw (handle remote changes)
      *
      * When Yjs document changes from remote peers:
-     * 1. Set flag to prevent echo loop
-     * 2. Use mergeRemoteChanges() to mark changes as remote
-     * 3. Compare current store with Yjs state
-     * 4. Add/update/remove records as needed
+     * 1. Skip if this is our own transaction (already applied locally)
+     * 2. Set flag to prevent echo loop
+     * 3. Use mergeRemoteChanges() to mark changes as remote
+     * 4. Compare current store with Yjs state
+     * 5. Add/update/remove records as needed
      */
-    const handleYjsChange = () => {
+    const handleYjsChange = (_events: Y.YEvent<unknown>[], transaction: Y.Transaction) => {
+      // Skip if this is our own transaction (we already applied it locally)
+      if (transaction.origin === clientId) return
       if (isApplyingRemote) return
 
       isApplyingRemote = true
@@ -91,21 +112,24 @@ export function useYjsStore(boardId: string, token: string): {
     }
 
     // Observe Yjs array for changes
-    yArr.observe(handleYjsChange)
+    yArr.observeDeep(handleYjsChange)
 
     /**
      * Sync tldraw -> Yjs (handle local changes)
      *
      * When user makes changes in tldraw:
      * 1. Filter for user-originated changes only (not remote)
-     * 2. Wrap in Yjs transaction for efficient batching
+     * 2. Wrap in Yjs transaction with clientId as origin for per-user undo
      * 3. Apply adds, updates, and deletes to YKeyValue
+     *
+     * IMPORTANT: clientId as transaction origin enables per-user undo tracking
      */
     const unsub = store.listen(
       ({ changes }) => {
         // Skip if we're currently applying remote changes
         if (isApplyingRemote) return
 
+        // Pass clientId as origin so UndoManager tracks this change
         doc.transact(() => {
           // Handle added records
           Object.values(changes.added).forEach(record => {
@@ -122,7 +146,7 @@ export function useYjsStore(boardId: string, token: string): {
           Object.values(changes.removed).forEach(record => {
             yStore.delete(record.id)
           })
-        })
+        }, clientId) // <-- clientId as transaction origin for per-user undo
       },
       { source: 'user', scope: 'document' }
     )
@@ -159,14 +183,18 @@ export function useYjsStore(boardId: string, token: string): {
      */
     return () => {
       unsub()
-      yArr.unobserve(handleYjsChange)
+      yArr.unobserveDeep(handleYjsChange)
       provider.destroy()
       doc.destroy()
+      docRef.current = null
+      yArrRef.current = null
     }
   }, [boardId, token, store])
 
   return {
     store: store as TLStoreWithStatus,
-    status
+    status,
+    doc: docRef.current,
+    yArr: yArrRef.current,
   }
 }
