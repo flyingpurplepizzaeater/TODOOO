@@ -5,6 +5,7 @@ import { useYjsStore, ConnectionStatus } from './useYjsStore'
 import { useUndoManager } from './useUndoManager'
 import { cameraOptions, handleWheel } from './cameraOptions'
 import { createUiOverrides } from './uiOverrides'
+import { toolbarComponents } from './CustomToolbar'
 
 interface CanvasProps {
   boardId: string
@@ -60,12 +61,13 @@ function ConnectionIndicator({ status }: { status: ConnectionStatus }) {
 /**
  * Undo/Redo status indicator component.
  * Shows availability of undo/redo in bottom-right corner.
+ * Positioned above custom toolbar (bottom: 70px) to avoid overlap.
  */
 function UndoRedoIndicator({ canUndo, canRedo }: { canUndo: boolean; canRedo: boolean }) {
   return (
     <div style={{
       position: 'absolute',
-      bottom: 8,
+      bottom: 70,
       right: 8,
       zIndex: 1000,
       display: 'flex',
@@ -140,6 +142,7 @@ export function Canvas({ boardId, token }: CanvasProps) {
         store={store}
         cameraOptions={cameraOptions}
         overrides={overrides}
+        components={toolbarComponents}
         onMount={handleMount}
         autoFocus
       />
