@@ -56,7 +56,13 @@ Plans:
 4. Canvas UI adapts properly from mobile (320px) to desktop (1920px+) viewports
 5. Canvas state syncs to other connected clients in real-time
 
-**Research Notes:** May need research on tldraw Yjs integration specifics.
+**Plans:** 4 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — React frontend setup (Vite + React + TypeScript)
+- [ ] 02-02-PLAN.md — tldraw integration with Yjs sync (useYjsStore hook)
+- [ ] 02-03-PLAN.md — Canvas customization (camera options, toolbar, keyboard shortcuts)
+- [ ] 02-04-PLAN.md — Per-user undo/redo (Yjs UndoManager integration)
 
 ---
 
@@ -187,8 +193,8 @@ Plans:
 
 | Phase | Name | Requirements | Status |
 |-------|------|--------------|--------|
-| 1 | Real-Time Infrastructure | SYNC-03, SYNC-04, SYNC-05 | ✓ Complete |
-| 2 | Canvas Foundation | CANV-01, CANV-02, CANV-04, PLAT-01 | Not Started |
+| 1 | Real-Time Infrastructure | SYNC-03, SYNC-04, SYNC-05 | Complete |
+| 2 | Canvas Foundation | CANV-01, CANV-02, CANV-04, PLAT-01 | Planned |
 | 3 | Drawing Tools | CANV-03, DRAW-01, DRAW-02, DRAW-03, DRAW-04 | Not Started |
 | 4 | Notes & Text | TEXT-01, TEXT-02, TEXT-03 | Not Started |
 | 5 | TODO Integration | TODO-01, TODO-02, TODO-03, TODO-04 | Not Started |
