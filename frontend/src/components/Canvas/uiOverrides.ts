@@ -51,13 +51,16 @@ export function createUiOverrides(
     tools(_editor, tools): TLUiToolsContextType {
       return {
         ...tools,
-        // Number keys for tools (1=select, 2=draw, 3=eraser, 4=arrow, 5=rectangle)
-        // Note: These will be useful in Phase 3 when drawing tools are enabled
+        // Number keys for tools (1=select, 2=draw, 3=eraser, 4=arrow, 5=rectangle, 6=highlight)
+        // Phase 3: Complete keyboard shortcuts for all drawing tools
         select: { ...tools.select, kbd: '1,v' },
-        draw: { ...tools.draw, kbd: '2,p' },
+        draw: { ...tools.draw, kbd: '2,p,d,b,x' },     // pen/brush shortcuts
         eraser: { ...tools.eraser, kbd: '3,e' },
         arrow: { ...tools.arrow, kbd: '4,a' },
         geo: { ...tools.geo, kbd: '5,r' },
+        highlight: { ...tools.highlight, kbd: '6,m,shift+d' },  // marker/highlight tool
+        line: { ...tools.line, kbd: 'l' },             // line tool
+        // Note: ellipse/circle uses 'o' by default in tldraw (no override needed)
       }
     },
   }
