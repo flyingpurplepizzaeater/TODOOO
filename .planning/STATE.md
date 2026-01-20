@@ -72,6 +72,10 @@
 | TLComponents for toolbar | Custom toolbar via components prop, not UI overrides | 2026-01-21 |
 | z-index 300 for toolbar | Below connection indicator (1000), above canvas | 2026-01-21 |
 | editor.inputs.isPointing | Correct property for pointer state detection in auto-hide | 2026-01-21 |
+| Stroke widths 2/6/12/18px | CONTEXT.md requested thin/medium/thick, added extra-thick bonus | 2026-01-21 |
+| 13-color palette | Professional (6) + vibrant saturated (7) for comprehensive options | 2026-01-21 |
+| Dark mode palette brighter | Slightly brighter values for visibility on dark backgrounds | 2026-01-21 |
+| configureStyles() at top of main.tsx | Must mutate tldraw constants before React/tldraw loads | 2026-01-21 |
 
 ### Research Flags
 
@@ -97,16 +101,17 @@ None currently.
 
 ## Session Continuity
 
-**Last session:** 2026-01-21 - Completed 03-02 (Custom Toolbar)
-**Next action:** Execute 03-03 (Style Configuration)
+**Last session:** 2026-01-21 - Completed 03-01 (Style Configuration)
+**Next action:** Execute 03-02 (Drawing Tools)
 
 **Context for next session:**
 - Phase 1 Real-Time Infrastructure complete
 - Phase 2 Canvas Foundation complete
-- Phase 3 Drawing Tools in progress (2/4 plans done)
+- Phase 3 Drawing Tools in progress (1/3 plans done)
 - Frontend Canvas component structure:
   - Canvas.tsx: tldraw wrapper with connection status indicator
   - CustomToolbar.tsx: Bottom-center toolbar with auto-hide and pin toggle
+  - styleConfig.ts: Custom stroke widths and 13-color palette
   - useYjsStore.ts: Bidirectional sync with YKeyValue
   - useUndoManager.ts: Per-user undo via Y.UndoManager
   - cameraOptions.ts: Zoom limits and Ctrl-only scroll
@@ -114,9 +119,13 @@ None currently.
 - Key patterns established:
   - TLComponents for toolbar replacement
   - store.listen with source:'user' for reactive state detection
-- Next: Style configuration (03-03) for stroke widths and color palette
+  - Global style mutation via configureStyles() before React mount
+- Style configuration complete:
+  - Stroke widths: 2/6/12/18px for s/m/l/xl
+  - Colors: 13 colors (professional + vibrant) for light and dark modes
+- Next: Execute 03-02 (Drawing Tools) for pen, marker, eraser, shapes
 
 ---
 
 *State initialized: 2026-01-19*
-*Last updated: 2026-01-21 after 03-02 completion*
+*Last updated: 2026-01-21 after 03-01 completion*
