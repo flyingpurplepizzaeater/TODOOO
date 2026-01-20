@@ -1,6 +1,9 @@
-import { Tldraw } from 'tldraw'
+import { useCallback, useRef } from 'react'
+import { Tldraw, Editor } from 'tldraw'
 import 'tldraw/tldraw.css'
 import { useYjsStore, ConnectionStatus } from './useYjsStore'
+import { cameraOptions, handleWheel } from './cameraOptions'
+import { uiOverrides } from './uiOverrides'
 
 interface CanvasProps {
   boardId: string
@@ -70,12 +73,34 @@ function ConnectionIndicator({ status }: { status: ConnectionStatus }) {
  */
 export function Canvas({ boardId, token }: CanvasProps) {
   const { store, status } = useYjsStore(boardId, token)
+  const editorRef = useRef<Editor | null>(null)
+
+  // Handle editor mount - enable snap mode and store reference
+  const handleMount = useCallback((editor: Editor) => {
+    editorRef.current = editor
+
+    // Enable snap mode (grid + object snapping) per CONTEXT.md
+    editor.user.updateUserPreferences({ isSnapMode: true })
+  }, [])
+
+  // Custom wheel handler for Ctrl+scroll only zoom
+  const onWheel = useCallback((e: React.WheelEvent) => {
+    if (editorRef.current) {
+      handleWheel(e.nativeEvent, editorRef.current)
+    }
+  }, [])
 
   return (
-    <div style={{ position: 'fixed', inset: 0 }}>
+    <div
+      style={{ position: 'fixed', inset: 0 }}
+      onWheel={onWheel}
+    >
       <ConnectionIndicator status={status} />
       <Tldraw
         store={store}
+        cameraOptions={cameraOptions}
+        overrides={uiOverrides}
+        onMount={handleMount}
         autoFocus
       />
     </div>
