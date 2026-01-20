@@ -11,19 +11,20 @@
 ## Current Position
 
 **Phase:** 2 - Canvas Foundation (IN PROGRESS)
-**Plan:** 3 of 6 complete
+**Plan:** 4 of 6 complete
 **Status:** In Progress
-**Last activity:** 2026-01-20 - Completed 02-03-PLAN.md (Canvas Customization)
+**Last activity:** 2026-01-20 - Completed 02-04-PLAN.md (Undo History)
 
 ```
-[#####-----] Plan 3/6 in Phase 2
-[==================>...........] Phase 2 of 8
+[######----] Plan 4/6 in Phase 2
+[===================>..........] Phase 2 of 8
 ```
 
 **Requirements completed this phase:**
 - (Plan 02-01 establishes frontend foundation - no requirements directly completed yet)
 - CANV-01: tldraw canvas renders in browser (Plan 02-02)
 - Pan/zoom: Ctrl+scroll zoom 10%-400%, bracket keys, number keys (Plan 02-03)
+- CANV-04: Per-user undo/redo via Yjs UndoManager (Plan 02-04)
 
 **Success criteria progress:**
 1. React frontend running at localhost:5173 - DONE
@@ -36,15 +37,16 @@
 8. Camera options configured (10%-400% zoom) - DONE
 9. Keyboard shortcuts extended (bracket/number keys) - DONE
 10. Snap mode enabled by default - DONE
+11. Per-user undo/redo with Yjs UndoManager - DONE
 
 ## Performance Metrics
 
 | Metric | Value |
 |--------|-------|
 | Phases completed | 1/8 |
-| Requirements done | 5/27 |
-| Current phase progress | 50% (3/6 plans) |
-| Plans completed this phase | 3/6 |
+| Requirements done | 6/27 |
+| Current phase progress | 67% (4/6 plans) |
+| Plans completed this phase | 4/6 |
 
 ## Accumulated Context
 
@@ -75,6 +77,9 @@
 | zoomSteps [0.1...4] | Defines 10%-400% zoom range as user requested | 2026-01-20 |
 | Custom wheel handler for Ctrl-only zoom | tldraw wheelBehavior doesn't support Ctrl-only natively | 2026-01-20 |
 | isSnapMode in onMount | Grid+object snapping enabled by default per CONTEXT.md | 2026-01-20 |
+| clientId as transaction origin | Enables UndoManager per-user tracking via trackedOrigins | 2026-01-20 |
+| observeDeep for transaction access | Callback receives transaction param needed to check origin | 2026-01-20 |
+| captureTimeout 500ms | Groups rapid changes into single undo operation for better UX | 2026-01-20 |
 
 ### Research Flags
 
@@ -100,24 +105,29 @@ None currently.
 
 ## Session Continuity
 
-**Last session:** 2026-01-20 - Completed Plan 02-03 (Canvas Customization)
-**Next action:** Execute Plan 02-04 (Undo History)
+**Last session:** 2026-01-20 - Completed Plan 02-04 (Undo History)
+**Next action:** Execute Plan 02-05 (Selection & Sharing)
 **Resume file:** None
 
 **Context for next session:**
 - Phase 1 Real-Time Infrastructure complete
-- Phase 2 Plans 01-03 complete:
+- Phase 2 Plans 01-04 complete:
   - Plan 02-01: React frontend foundation (Vite + TypeScript)
   - Plan 02-02: tldraw canvas with Yjs sync
   - Plan 02-03: Camera options, keyboard shortcuts, snap mode
+  - Plan 02-04: Per-user undo/redo with Yjs UndoManager
 - Frontend components:
   - Canvas component at frontend/src/components/Canvas/
-  - useYjsStore hook for bidirectional Yjs-tldraw sync
+  - useYjsStore hook for bidirectional Yjs-tldraw sync (exports doc, yArr)
+  - useUndoManager hook for per-user undo/redo via clientId origin
   - cameraOptions.ts: 10%-400% zoom, Ctrl+scroll handler
-  - uiOverrides.ts: bracket keys for zoom, number keys for tools
+  - uiOverrides.ts: createUiOverrides() with custom undo/redo
   - WebSocket provider at frontend/src/lib/yjs/provider.ts
-- Yjs document structure: Y.Array with YKeyValue wrapper under key 'tldraw'
-- Ready for undo/redo history implementation (per-user)
+- Per-user undo architecture:
+  - clientId as transaction origin for all local changes
+  - trackedOrigins in UndoManager scoped to client's own clientId
+  - Ctrl+Z/Ctrl+Shift+Z override tldraw's global undo/redo
+- Ready for selection visualization and presence indicators
 
 ---
 
