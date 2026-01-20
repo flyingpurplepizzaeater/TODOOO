@@ -1,9 +1,10 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { Tldraw, Editor } from 'tldraw'
 import 'tldraw/tldraw.css'
 import { useYjsStore, ConnectionStatus } from './useYjsStore'
+import { useUndoManager } from './useUndoManager'
 import { cameraOptions, handleWheel } from './cameraOptions'
-import { uiOverrides } from './uiOverrides'
+import { createUiOverrides } from './uiOverrides'
 
 interface CanvasProps {
   boardId: string
@@ -57,6 +58,36 @@ function ConnectionIndicator({ status }: { status: ConnectionStatus }) {
 }
 
 /**
+ * Undo/Redo status indicator component.
+ * Shows availability of undo/redo in bottom-right corner.
+ */
+function UndoRedoIndicator({ canUndo, canRedo }: { canUndo: boolean; canRedo: boolean }) {
+  return (
+    <div style={{
+      position: 'absolute',
+      bottom: 8,
+      right: 8,
+      zIndex: 1000,
+      display: 'flex',
+      gap: 8,
+      padding: '4px 8px',
+      borderRadius: 4,
+      background: 'rgba(255, 255, 255, 0.9)',
+      fontSize: 12,
+      fontFamily: 'system-ui, sans-serif',
+      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+    }}>
+      <span style={{ color: canUndo ? '#333' : '#999' }}>
+        Undo {canUndo ? '(Ctrl+Z)' : ''}
+      </span>
+      <span style={{ color: canRedo ? '#333' : '#999' }}>
+        Redo {canRedo ? '(Ctrl+Shift+Z)' : ''}
+      </span>
+    </div>
+  )
+}
+
+/**
  * Canvas component that renders tldraw with Yjs synchronization.
  *
  * Requires:
@@ -67,13 +98,21 @@ function ConnectionIndicator({ status }: { status: ConnectionStatus }) {
  * - Full-viewport canvas (position: fixed, inset: 0)
  * - Real-time sync via Yjs WebSocket
  * - Connection status indicator
+ * - Per-user undo/redo (CANV-04) via Yjs UndoManager
  *
  * Note: tldraw requires a license for production use. In development/hobby
  * mode, a "Made with tldraw" watermark appears.
  */
 export function Canvas({ boardId, token }: CanvasProps) {
-  const { store, status } = useYjsStore(boardId, token)
+  const { store, status, doc, yArr } = useYjsStore(boardId, token)
+  const { canUndo, canRedo, undo, redo } = useUndoManager(doc, yArr)
   const editorRef = useRef<Editor | null>(null)
+
+  // Create UI overrides with per-user undo/redo
+  const overrides = useMemo(
+    () => createUiOverrides(undo, redo),
+    [undo, redo]
+  )
 
   // Handle editor mount - enable snap mode and store reference
   const handleMount = useCallback((editor: Editor) => {
@@ -96,10 +135,11 @@ export function Canvas({ boardId, token }: CanvasProps) {
       onWheel={onWheel}
     >
       <ConnectionIndicator status={status} />
+      <UndoRedoIndicator canUndo={canUndo} canRedo={canRedo} />
       <Tldraw
         store={store}
         cameraOptions={cameraOptions}
-        overrides={uiOverrides}
+        overrides={overrides}
         onMount={handleMount}
         autoFocus
       />
