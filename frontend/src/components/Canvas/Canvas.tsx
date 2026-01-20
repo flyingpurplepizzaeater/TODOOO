@@ -116,12 +116,16 @@ export function Canvas({ boardId, token }: CanvasProps) {
     [undo, redo]
   )
 
-  // Handle editor mount - enable snap mode and store reference
+  // Handle editor mount - enable snap mode, set default tool, and store reference
   const handleMount = useCallback((editor: Editor) => {
     editorRef.current = editor
 
     // Enable snap mode (grid + object snapping) per CONTEXT.md
     editor.user.updateUserPreferences({ isSnapMode: true })
+
+    // Set default tool to select (safe default per CONTEXT.md)
+    // Prevents accidental drawing on canvas open
+    editor.setCurrentTool('select')
   }, [])
 
   // Custom wheel handler for Ctrl+scroll only zoom
