@@ -11,32 +11,36 @@
 ## Current Position
 
 **Phase:** 2 - Canvas Foundation (IN PROGRESS)
-**Plan:** 1 of 6 complete
+**Plan:** 2 of 6 complete
 **Status:** In Progress
-**Last activity:** 2026-01-20 - Completed 02-01-PLAN.md (React Frontend Setup)
+**Last activity:** 2026-01-20 - Completed 02-02-PLAN.md (tldraw Integration)
 
 ```
-[##--------] Plan 1/6 in Phase 2
+[####------] Plan 2/6 in Phase 2
 [==================>...........] Phase 2 of 8
 ```
 
 **Requirements completed this phase:**
 - (Plan 02-01 establishes frontend foundation - no requirements directly completed yet)
+- CANV-01: tldraw canvas renders in browser (Plan 02-02)
 
 **Success criteria progress:**
 1. React frontend running at localhost:5173 - DONE
 2. TypeScript strict mode enabled - DONE
 3. Full-viewport container ready for tldraw - DONE
 4. Environment config for backend connection - DONE
+5. tldraw canvas renders in browser - DONE
+6. Yjs sync hook connects to backend WebSocket - DONE
+7. Connection status indicator shows state - DONE
 
 ## Performance Metrics
 
 | Metric | Value |
 |--------|-------|
 | Phases completed | 1/8 |
-| Requirements done | 3/27 |
-| Current phase progress | 17% (1/6 plans) |
-| Plans completed this phase | 1/6 |
+| Requirements done | 4/27 |
+| Current phase progress | 33% (2/6 plans) |
+| Plans completed this phase | 2/6 |
 
 ## Accumulated Context
 
@@ -61,13 +65,16 @@
 | React 19.2 | Latest stable with concurrent features | 2026-01-20 |
 | TypeScript strict mode | Maximum type safety | 2026-01-20 |
 | Full-viewport container pattern | position:fixed inset:0 required by tldraw | 2026-01-20 |
+| YKeyValue over Y.Map | Prevents unbounded memory growth for tldraw records | 2026-01-20 |
+| mergeRemoteChanges() for sync | Required to prevent echo loops in bidirectional sync | 2026-01-20 |
+| source:'user' filter | Store listener only processes user-originated changes | 2026-01-20 |
 
 ### Research Flags
 
 | Phase | Topic | Status |
 |-------|-------|--------|
 | 1 | pycrdt-websocket room lifecycle | Complete - custom RoomManager implemented |
-| 2 | tldraw Yjs integration specifics | Pending - Plan 02-02 |
+| 2 | tldraw Yjs integration specifics | Complete - useYjsStore hook implemented |
 | 8 | iOS canvas memory limits | Pending |
 
 ### TODOs
@@ -86,20 +93,21 @@ None currently.
 
 ## Session Continuity
 
-**Last session:** 2026-01-20 - Completed Plan 02-01 (React Frontend Setup)
-**Next action:** Execute Plan 02-02 (tldraw Integration)
+**Last session:** 2026-01-20 - Completed Plan 02-02 (tldraw Integration)
+**Next action:** Execute Plan 02-03 (Custom Shapes)
 **Resume file:** None
 
 **Context for next session:**
 - Phase 1 Real-Time Infrastructure complete
-- Phase 2 Plan 01 complete - React frontend foundation
-- Frontend at frontend/ directory with:
-  - React 19.2 + Vite 7.3.1 + TypeScript 5.9
-  - Full-viewport container ready for tldraw (position:fixed inset:0)
-  - Config at frontend/src/config.ts with apiUrl and wsUrl
-  - Dev server at localhost:5173 (or next available port)
-- Backend WebSocket endpoint at /ws/canvas/{board_id} with JWT auth
-- Ready to install tldraw and integrate with Yjs
+- Phase 2 Plans 01-02 complete:
+  - Plan 02-01: React frontend foundation (Vite + TypeScript)
+  - Plan 02-02: tldraw canvas with Yjs sync
+- Frontend components:
+  - Canvas component at frontend/src/components/Canvas/
+  - useYjsStore hook for bidirectional Yjs-tldraw sync
+  - WebSocket provider at frontend/src/lib/yjs/provider.ts
+- Yjs document structure: Y.Array with YKeyValue wrapper under key 'tldraw'
+- Ready for custom shape definitions (TODO shape, etc.)
 
 ---
 
