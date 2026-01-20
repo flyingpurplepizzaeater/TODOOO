@@ -7,10 +7,10 @@
 
 ### Canvas
 
-- [ ] **CANV-01**: User can view infinite canvas with pan and zoom navigation
-- [ ] **CANV-02**: User can select objects and move/resize/delete them
+- [x] **CANV-01**: User can view infinite canvas with pan and zoom navigation
+- [x] **CANV-02**: User can select objects and move/resize/delete them
 - [ ] **CANV-03**: User can add basic shapes (rectangle, circle, line, arrow)
-- [ ] **CANV-04**: User can undo/redo their own actions (per-user in collaborative mode)
+- [x] **CANV-04**: User can undo/redo their own actions (per-user in collaborative mode)
 
 ### Drawing
 
@@ -48,7 +48,7 @@
 
 ### Platform
 
-- [ ] **PLAT-01**: Web app works responsively on any screen size
+- [x] **PLAT-01**: Web app works responsively on any screen size
 - [ ] **PLAT-02**: iOS native app wrapper via Capacitor
 - [ ] **PLAT-03**: Android native app wrapper via Capacitor
 - [ ] **PLAT-04**: Touch gestures work (pinch zoom, touch draw) on mobile
@@ -104,10 +104,10 @@ Explicitly excluded from this project:
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CANV-01 | Phase 2 | Pending |
-| CANV-02 | Phase 2 | Pending |
+| CANV-01 | Phase 2 | Complete |
+| CANV-02 | Phase 2 | Complete |
 | CANV-03 | Phase 3 | Pending |
-| CANV-04 | Phase 2 | Pending |
+| CANV-04 | Phase 2 | Complete |
 | DRAW-01 | Phase 3 | Pending |
 | DRAW-02 | Phase 3 | Pending |
 | DRAW-03 | Phase 3 | Pending |
@@ -127,7 +127,7 @@ Explicitly excluded from this project:
 | FILE-01 | Phase 6 | Pending |
 | FILE-02 | Phase 6 | Pending |
 | FILE-03 | Phase 6 | Pending |
-| PLAT-01 | Phase 2 | Pending |
+| PLAT-01 | Phase 2 | Complete |
 | PLAT-02 | Phase 8 | Pending |
 | PLAT-03 | Phase 8 | Pending |
 | PLAT-04 | Phase 8 | Pending |
@@ -139,4 +139,4 @@ Explicitly excluded from this project:
 
 ---
 *Requirements defined: 2026-01-19*
-*Last updated: 2026-01-20 after Phase 1 completion*
+*Last updated: 2026-01-20 after Phase 2 completion*
