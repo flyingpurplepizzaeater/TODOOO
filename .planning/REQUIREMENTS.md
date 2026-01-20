@@ -9,15 +9,15 @@
 
 - [x] **CANV-01**: User can view infinite canvas with pan and zoom navigation
 - [x] **CANV-02**: User can select objects and move/resize/delete them
-- [ ] **CANV-03**: User can add basic shapes (rectangle, circle, line, arrow)
+- [x] **CANV-03**: User can add basic shapes (rectangle, circle, line, arrow)
 - [x] **CANV-04**: User can undo/redo their own actions (per-user in collaborative mode)
 
 ### Drawing
 
-- [ ] **DRAW-01**: User can draw freehand strokes with pen/marker tool
-- [ ] **DRAW-02**: User can erase strokes with eraser tool
-- [ ] **DRAW-03**: User can select from 8-12 preset colors for drawing
-- [ ] **DRAW-04**: User can select stroke width (thin, medium, thick)
+- [x] **DRAW-01**: User can draw freehand strokes with pen/marker tool
+- [x] **DRAW-02**: User can erase strokes with eraser tool
+- [x] **DRAW-03**: User can select from 8-12 preset colors for drawing
+- [x] **DRAW-04**: User can select stroke width (thin, medium, thick)
 
 ### Notes & Text
 
@@ -106,12 +106,12 @@ Explicitly excluded from this project:
 |-------------|-------|--------|
 | CANV-01 | Phase 2 | Complete |
 | CANV-02 | Phase 2 | Complete |
-| CANV-03 | Phase 3 | Pending |
+| CANV-03 | Phase 3 | Complete |
 | CANV-04 | Phase 2 | Complete |
-| DRAW-01 | Phase 3 | Pending |
-| DRAW-02 | Phase 3 | Pending |
-| DRAW-03 | Phase 3 | Pending |
-| DRAW-04 | Phase 3 | Pending |
+| DRAW-01 | Phase 3 | Complete |
+| DRAW-02 | Phase 3 | Complete |
+| DRAW-03 | Phase 3 | Complete |
+| DRAW-04 | Phase 3 | Complete |
 | TEXT-01 | Phase 4 | Pending |
 | TEXT-02 | Phase 4 | Pending |
 | TEXT-03 | Phase 4 | Pending |
@@ -139,4 +139,4 @@ Explicitly excluded from this project:
 
 ---
 *Requirements defined: 2026-01-19*
-*Last updated: 2026-01-20 after Phase 2 completion*
+*Last updated: 2026-01-21 after Phase 3 completion*
