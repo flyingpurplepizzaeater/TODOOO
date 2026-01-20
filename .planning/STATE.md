@@ -11,18 +11,19 @@
 ## Current Position
 
 **Phase:** 2 - Canvas Foundation (IN PROGRESS)
-**Plan:** 2 of 6 complete
+**Plan:** 3 of 6 complete
 **Status:** In Progress
-**Last activity:** 2026-01-20 - Completed 02-02-PLAN.md (tldraw Integration)
+**Last activity:** 2026-01-20 - Completed 02-03-PLAN.md (Canvas Customization)
 
 ```
-[####------] Plan 2/6 in Phase 2
+[#####-----] Plan 3/6 in Phase 2
 [==================>...........] Phase 2 of 8
 ```
 
 **Requirements completed this phase:**
 - (Plan 02-01 establishes frontend foundation - no requirements directly completed yet)
 - CANV-01: tldraw canvas renders in browser (Plan 02-02)
+- Pan/zoom: Ctrl+scroll zoom 10%-400%, bracket keys, number keys (Plan 02-03)
 
 **Success criteria progress:**
 1. React frontend running at localhost:5173 - DONE
@@ -32,15 +33,18 @@
 5. tldraw canvas renders in browser - DONE
 6. Yjs sync hook connects to backend WebSocket - DONE
 7. Connection status indicator shows state - DONE
+8. Camera options configured (10%-400% zoom) - DONE
+9. Keyboard shortcuts extended (bracket/number keys) - DONE
+10. Snap mode enabled by default - DONE
 
 ## Performance Metrics
 
 | Metric | Value |
 |--------|-------|
 | Phases completed | 1/8 |
-| Requirements done | 4/27 |
-| Current phase progress | 33% (2/6 plans) |
-| Plans completed this phase | 2/6 |
+| Requirements done | 5/27 |
+| Current phase progress | 50% (3/6 plans) |
+| Plans completed this phase | 3/6 |
 
 ## Accumulated Context
 
@@ -68,6 +72,9 @@
 | YKeyValue over Y.Map | Prevents unbounded memory growth for tldraw records | 2026-01-20 |
 | mergeRemoteChanges() for sync | Required to prevent echo loops in bidirectional sync | 2026-01-20 |
 | source:'user' filter | Store listener only processes user-originated changes | 2026-01-20 |
+| zoomSteps [0.1...4] | Defines 10%-400% zoom range as user requested | 2026-01-20 |
+| Custom wheel handler for Ctrl-only zoom | tldraw wheelBehavior doesn't support Ctrl-only natively | 2026-01-20 |
+| isSnapMode in onMount | Grid+object snapping enabled by default per CONTEXT.md | 2026-01-20 |
 
 ### Research Flags
 
@@ -93,21 +100,24 @@ None currently.
 
 ## Session Continuity
 
-**Last session:** 2026-01-20 - Completed Plan 02-02 (tldraw Integration)
-**Next action:** Execute Plan 02-03 (Custom Shapes)
+**Last session:** 2026-01-20 - Completed Plan 02-03 (Canvas Customization)
+**Next action:** Execute Plan 02-04 (Undo History)
 **Resume file:** None
 
 **Context for next session:**
 - Phase 1 Real-Time Infrastructure complete
-- Phase 2 Plans 01-02 complete:
+- Phase 2 Plans 01-03 complete:
   - Plan 02-01: React frontend foundation (Vite + TypeScript)
   - Plan 02-02: tldraw canvas with Yjs sync
+  - Plan 02-03: Camera options, keyboard shortcuts, snap mode
 - Frontend components:
   - Canvas component at frontend/src/components/Canvas/
   - useYjsStore hook for bidirectional Yjs-tldraw sync
+  - cameraOptions.ts: 10%-400% zoom, Ctrl+scroll handler
+  - uiOverrides.ts: bracket keys for zoom, number keys for tools
   - WebSocket provider at frontend/src/lib/yjs/provider.ts
 - Yjs document structure: Y.Array with YKeyValue wrapper under key 'tldraw'
-- Ready for custom shape definitions (TODO shape, etc.)
+- Ready for undo/redo history implementation (per-user)
 
 ---
 
