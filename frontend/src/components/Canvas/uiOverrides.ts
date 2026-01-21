@@ -1,4 +1,4 @@
-import { TLUiOverrides, TLUiActionsContextType, TLUiToolsContextType } from 'tldraw'
+import type { TLUiOverrides, TLUiActionsContextType, TLUiToolsContextType } from 'tldraw'
 
 /**
  * Create UI overrides with custom undo/redo handlers.

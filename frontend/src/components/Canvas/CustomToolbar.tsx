@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { DefaultToolbar, useEditor, TLComponents } from 'tldraw'
+import { DefaultToolbar, useEditor, type TLComponents } from 'tldraw'
 
 /**
  * Custom toolbar positioned at bottom-center with auto-hide functionality.

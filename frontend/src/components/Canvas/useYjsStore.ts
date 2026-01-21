@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { createTLStore, defaultShapeUtils, TLRecord, TLStoreWithStatus } from 'tldraw'
+import { createTLStore, defaultShapeUtils, type TLRecord, type TLStoreWithStatus } from 'tldraw'
 import * as Y from 'yjs'
 import { YKeyValue } from 'y-utility/y-keyvalue'
 import { createYjsProvider } from '../../lib/yjs/provider'

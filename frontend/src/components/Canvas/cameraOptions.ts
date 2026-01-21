@@ -1,4 +1,4 @@
-import { TLCameraOptions, Editor } from 'tldraw'
+import { type TLCameraOptions, Editor } from 'tldraw'
 
 /**
  * Camera configuration for CollabBoard canvas.
