@@ -69,13 +69,14 @@ export function createNoteColorListener(editor: Editor): () => void {
   return editor.store.listen(
     (entry) => {
       // Check for instance state updates
-      const instanceUpdate = entry.changes.updated['instance:instance_state']
+      // Cast to access instance_state key which holds editor preferences
+      const updated = entry.changes.updated as Record<string, [unknown, unknown]>
+      const instanceUpdate = updated['instance:instance_state']
       if (instanceUpdate) {
         // instanceUpdate is [oldValue, newValue]
-        const newState = instanceUpdate[1]
-        if (newState && 'stylesForNextShape' in newState) {
-          const styles = newState.stylesForNextShape as Record<string, string> | undefined
-          const colorKey = styles?.['tldraw:color']
+        const newState = instanceUpdate[1] as { stylesForNextShape?: Record<string, string> } | null
+        if (newState?.stylesForNextShape) {
+          const colorKey = newState.stylesForNextShape['tldraw:color']
           if (colorKey) {
             saveNoteColor(colorKey)
           }

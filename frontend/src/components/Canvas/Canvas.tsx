@@ -1,11 +1,12 @@
 import { useCallback, useMemo, useRef } from 'react'
 import { Tldraw, Editor } from 'tldraw'
 import 'tldraw/tldraw.css'
-import { useYjsStore, ConnectionStatus } from './useYjsStore'
+import { useYjsStore, type ConnectionStatus } from './useYjsStore'
 import { useUndoManager } from './useUndoManager'
 import { cameraOptions, handleWheel } from './cameraOptions'
 import { createUiOverrides } from './uiOverrides'
 import { toolbarComponents } from './CustomToolbar'
+import { restoreNoteColor, createNoteColorListener } from './noteColorPersistence'
 
 interface CanvasProps {
   boardId: string
@@ -126,6 +127,20 @@ export function Canvas({ boardId, token }: CanvasProps) {
     // Set default tool to select (safe default per CONTEXT.md)
     // Prevents accidental drawing on canvas open
     editor.setCurrentTool('select')
+
+    // Enable aspect-locked resize for notes (square Post-it shape)
+    // Per RESEARCH.md: NoteShapeUtil.options.resizeMode = 'scale'
+    const noteUtil = editor.getShapeUtil('note')
+    if (noteUtil && 'options' in noteUtil) {
+      (noteUtil as unknown as { options: { resizeMode: string } }).options.resizeMode = 'scale'
+    }
+
+    // Restore last-used note color from localStorage
+    restoreNoteColor(editor)
+
+    // Start note color persistence listener
+    // Persists color changes to localStorage for session continuity
+    createNoteColorListener(editor)
   }, [])
 
   // Custom wheel handler for Ctrl+scroll only zoom
