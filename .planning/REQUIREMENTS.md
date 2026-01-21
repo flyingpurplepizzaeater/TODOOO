@@ -21,9 +21,9 @@
 
 ### Notes & Text
 
-- [ ] **TEXT-01**: User can add sticky notes with multiple color options
-- [ ] **TEXT-02**: User can add standalone text objects to canvas
-- [ ] **TEXT-03**: User can edit text inline by clicking (no modal dialog)
+- [x] **TEXT-01**: User can add sticky notes with multiple color options
+- [x] **TEXT-02**: User can add standalone text objects to canvas
+- [x] **TEXT-03**: User can edit text inline by clicking (no modal dialog)
 
 ### Real-Time Collaboration
 
@@ -35,10 +35,10 @@
 
 ### TODO Integration
 
-- [ ] **TODO-01**: User can add TODO cards to canvas with status, due date, assignee
-- [ ] **TODO-02**: User sees visual task status (checkmark, color coding for done/not done)
-- [ ] **TODO-03**: User can group tasks into visual sections on canvas
-- [ ] **TODO-04**: Canvas TODO cards sync with existing backend TODO system
+- [x] **TODO-01**: User can add TODO cards to canvas with status, due date, assignee
+- [x] **TODO-02**: User sees visual task status (checkmark, color coding for done/not done)
+- [x] **TODO-03**: User can group tasks into visual sections on canvas
+- [x] **TODO-04**: Canvas TODO cards sync with existing backend TODO system
 
 ### File Handling
 
@@ -112,18 +112,18 @@ Explicitly excluded from this project:
 | DRAW-02 | Phase 3 | Complete |
 | DRAW-03 | Phase 3 | Complete |
 | DRAW-04 | Phase 3 | Complete |
-| TEXT-01 | Phase 4 | Pending |
-| TEXT-02 | Phase 4 | Pending |
-| TEXT-03 | Phase 4 | Pending |
+| TEXT-01 | Phase 4 | Complete |
+| TEXT-02 | Phase 4 | Complete |
+| TEXT-03 | Phase 4 | Complete |
 | SYNC-01 | Phase 7 | Pending |
 | SYNC-02 | Phase 7 | Pending |
 | SYNC-03 | Phase 1 | Complete |
 | SYNC-04 | Phase 1 | Complete |
 | SYNC-05 | Phase 1 | Complete |
-| TODO-01 | Phase 5 | Pending |
-| TODO-02 | Phase 5 | Pending |
-| TODO-03 | Phase 5 | Pending |
-| TODO-04 | Phase 5 | Pending |
+| TODO-01 | Phase 5 | Complete |
+| TODO-02 | Phase 5 | Complete |
+| TODO-03 | Phase 5 | Complete |
+| TODO-04 | Phase 5 | Complete |
 | FILE-01 | Phase 6 | Pending |
 | FILE-02 | Phase 6 | Pending |
 | FILE-03 | Phase 6 | Pending |
@@ -139,4 +139,4 @@ Explicitly excluded from this project:
 
 ---
 *Requirements defined: 2026-01-19*
-*Last updated: 2026-01-21 after Phase 3 completion*
+*Last updated: 2026-01-22 after Phase 5 completion*
