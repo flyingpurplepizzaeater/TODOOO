@@ -11,26 +11,26 @@
 ## Current Position
 
 **Phase:** 5 - TODO Integration (IN PROGRESS)
-**Plan:** 3 of 4 complete
+**Plan:** 2 of 4 complete (Wave 1 complete, Waves 2-3 pending)
 **Status:** In Progress
-**Last activity:** 2026-01-21 - Completed 05-03 Frame Presets plan
+**Last activity:** 2026-01-21 - Completed 05-01 TODO Card Shape plan
 
 ```
-[#######...] Plan 3/4 in Phase 5
+[#####.....] Plan 2/4 in Phase 5
 [================================================>.] Phase 5 of 8
 ```
 
 **Phase 5 progress:**
-- 05-01: Research - COMPLETE (TODO shapes, bidirectional sync, frames)
-- 05-02: Planning - COMPLETE (4 plans created)
+- 05-01: TODO Card Shape - COMPLETE (TodoShapeUtil, TodoCard, toolbar integration)
+- 05-02: Backend Sync - PENDING (Wave 2)
 - 05-03: Frame Presets - COMPLETE (Kanban, Eisenhower, Weekly, Custom)
-- 05-04: TODO Card Shape - PENDING
+- 05-04: Task Status Visualization - PENDING (Wave 3)
 
 **Requirements for this phase:**
-- TODO-01: User can add TODO cards with title/status/due date/assignee - PENDING
-- TODO-02: User can mark tasks complete with visual feedback - PENDING
+- TODO-01: User can add TODO cards with title/status/due date/assignee - DONE (via TODO shape)
+- TODO-02: User can mark tasks complete with visual feedback - DONE (checkbox, green tint, strikethrough)
 - TODO-03: User can organize TODOs into visual sections (frames) - DONE (frames ready)
-- TODO-04: TODO changes sync bidirectionally with backend - PENDING
+- TODO-04: TODO changes sync bidirectionally with backend - PENDING (05-02)
 
 **Deferred verification:**
 - Manual testing deferred per user request (Phases 3, 4, and 5 need visual verification)
@@ -40,9 +40,9 @@
 | Metric | Value |
 |--------|-------|
 | Phases completed | 4/8 (Phase 5 in progress) |
-| Requirements done | 16/27 |
-| Current phase progress | 75% (3/4 plans) |
-| Plans completed this phase | 3/4 |
+| Requirements done | 18/27 |
+| Current phase progress | 50% (2/4 plans) |
+| Plans completed this phase | 2/4 |
 
 ## Accumulated Context
 
@@ -91,6 +91,10 @@
 | resizeMode='scale' for notes | Aspect-locked resize for square Post-it shape | 2026-01-21 |
 | Dropdown for frame presets | Space-efficient UI, keeps toolbar compact | 2026-01-21 |
 | Viewport-center frame placement | Presets visible immediately after creation | 2026-01-21 |
+| T.literalEnum for TODO priority | Type-safe enum validator for high/medium/low | 2026-01-21 |
+| Free resize for TODO cards | Per CONTEXT.md, not aspect-locked like notes | 2026-01-21 |
+| isPast + isToday for overdue | Overdue = past due date AND not today | 2026-01-21 |
+| Shape utils outside component | Const arrays prevent recreation on render | 2026-01-21 |
 
 ### Research Flags
 
@@ -121,25 +125,26 @@ None currently.
 
 ## Session Continuity
 
-**Last session:** 2026-01-21 - Completed 05-03 Frame Presets plan
-**Next action:** Execute 05-04 TODO Card Shape plan
+**Last session:** 2026-01-21 - Completed 05-01 TODO Card Shape plan
+**Next action:** Execute 05-02 Backend Sync plan (Wave 2)
 
 **Context for next session:**
 - Phase 1 Real-Time Infrastructure complete
 - Phase 2 Canvas Foundation complete
 - Phase 3 Drawing Tools complete
 - Phase 4 Notes & Text complete
-- Phase 5 TODO Integration in progress (3/4 plans complete)
+- Phase 5 TODO Integration in progress (2/4 plans complete - Wave 1 done)
 - Frontend Canvas component structure:
-  - Canvas.tsx: tldraw wrapper with note config, resize mode, color persistence
-  - CustomToolbar.tsx: Bottom-center toolbar with auto-hide, pin toggle, and Frames dropdown
+  - Canvas.tsx: tldraw wrapper with note config, resize mode, color persistence, TODO shape/tool
+  - CustomToolbar.tsx: Bottom-center toolbar with auto-hide, pin toggle, Frames dropdown, TODO button
   - styleConfig.ts: Custom stroke widths, 13-color palette, 8 note colors
   - framePresets.ts: Kanban, Eisenhower, Weekly, Custom frame creators
   - noteColorPersistence.ts: localStorage persistence for note color
   - useYjsStore.ts: Bidirectional sync with YKeyValue
   - useUndoManager.ts: Per-user undo via Y.UndoManager
   - cameraOptions.ts: Zoom limits and Ctrl-only scroll
-  - uiOverrides.ts: Complete keyboard shortcuts for all tools
+  - uiOverrides.ts: Complete keyboard shortcuts for all tools including T/7 for TODO
+  - shapes/todo/: TodoShapeUtil, TodoTool, TodoCard, types (new in 05-01)
 - Key patterns established:
   - TLComponents for toolbar replacement
   - store.listen with source:'user' for reactive state detection
@@ -148,13 +153,17 @@ None currently.
   - localStorage persistence for user style preferences
   - Frame presets via editor.createShape({ type: 'frame' })
   - Dropdown menus with click-outside dismiss pattern
+  - Custom shape: types.ts -> Component.tsx -> ShapeUtil.tsx -> Tool.ts -> index.ts
+  - Shape/tool registration outside component (const customShapeUtils = [...])
 - Phase 5 progress:
   - Frame presets: Kanban (3 columns), Eisenhower (2x2), Weekly (Mon-Fri), Custom
-  - Frames dropdown in toolbar with getViewportCenter placement
-  - Next: Custom TodoShapeUtil with BaseBoxShapeUtil pattern
+  - TODO shape: TodoShapeUtil with checkbox, priority border, overdue styling
+  - TODO tool: Click-to-create with select tool switch
+  - Toolbar: TODO button + Frames dropdown
+  - Next: Backend sync for TODO shapes (05-02)
 - Manual testing deferred: Phases 3, 4, and 5 need visual verification
 
 ---
 
 *State initialized: 2026-01-19*
-*Last updated: 2026-01-21 after 05-03 Frame Presets completion*
+*Last updated: 2026-01-21 after 05-01 TODO Card Shape completion*
