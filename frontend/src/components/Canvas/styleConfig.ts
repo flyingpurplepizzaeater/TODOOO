@@ -1,7 +1,7 @@
 /**
  * Style configuration for tldraw
  *
- * Customizes stroke widths and color palette for the canvas.
+ * Customizes stroke widths, color palette, and sticky note colors for the canvas.
  * MUST be called BEFORE any Tldraw component mounts.
  *
  * @module styleConfig
@@ -83,4 +83,78 @@ export function configureStyles(): void {
   DefaultColorThemePalette.darkMode['light-green'].solid = '#a3e635'  // brighter lime
   DefaultColorThemePalette.darkMode['light-red'].solid = '#f472b6'    // brighter pink
   DefaultColorThemePalette.darkMode['light-violet'].solid = '#c084fc' // brighter purple
+
+  // =============================================================
+  // Sticky Note Colors - Light Mode
+  // 8 colors for Post-it style notes per CONTEXT.md
+  // =============================================================
+
+  // Classic Post-it yellow (default)
+  DefaultColorThemePalette.lightMode.yellow.noteFill = '#FEF3C7'
+  DefaultColorThemePalette.lightMode.yellow.noteText = '#1a1a2e'
+
+  // Pink (light-red slot)
+  DefaultColorThemePalette.lightMode['light-red'].noteFill = '#FECACA'
+  DefaultColorThemePalette.lightMode['light-red'].noteText = '#1a1a2e'
+
+  // Sky blue (light-blue slot)
+  DefaultColorThemePalette.lightMode['light-blue'].noteFill = '#BFDBFE'
+  DefaultColorThemePalette.lightMode['light-blue'].noteText = '#1a1a2e'
+
+  // Mint green (light-green slot)
+  DefaultColorThemePalette.lightMode['light-green'].noteFill = '#BBF7D0'
+  DefaultColorThemePalette.lightMode['light-green'].noteText = '#1a1a2e'
+
+  // Peach orange
+  DefaultColorThemePalette.lightMode.orange.noteFill = '#FED7AA'
+  DefaultColorThemePalette.lightMode.orange.noteText = '#1a1a2e'
+
+  // Purple (violet slot)
+  DefaultColorThemePalette.lightMode.violet.noteFill = '#DDD6FE'
+  DefaultColorThemePalette.lightMode.violet.noteText = '#1a1a2e'
+
+  // Lavender (light-violet slot)
+  DefaultColorThemePalette.lightMode['light-violet'].noteFill = '#E9D5FF'
+  DefaultColorThemePalette.lightMode['light-violet'].noteText = '#1a1a2e'
+
+  // Plain white
+  DefaultColorThemePalette.lightMode.white.noteFill = '#FFFFFF'
+  DefaultColorThemePalette.lightMode.white.noteText = '#1a1a2e'
+
+  // =============================================================
+  // Sticky Note Colors - Dark Mode
+  // Slightly brighter for visibility on dark backgrounds
+  // =============================================================
+
+  // Classic Post-it yellow (default)
+  DefaultColorThemePalette.darkMode.yellow.noteFill = '#FEF9C3'
+  DefaultColorThemePalette.darkMode.yellow.noteText = '#1a1a2e'
+
+  // Pink (light-red slot)
+  DefaultColorThemePalette.darkMode['light-red'].noteFill = '#FECDD3'
+  DefaultColorThemePalette.darkMode['light-red'].noteText = '#1a1a2e'
+
+  // Sky blue (light-blue slot)
+  DefaultColorThemePalette.darkMode['light-blue'].noteFill = '#DBEAFE'
+  DefaultColorThemePalette.darkMode['light-blue'].noteText = '#1a1a2e'
+
+  // Mint green (light-green slot)
+  DefaultColorThemePalette.darkMode['light-green'].noteFill = '#D1FAE5'
+  DefaultColorThemePalette.darkMode['light-green'].noteText = '#1a1a2e'
+
+  // Peach orange
+  DefaultColorThemePalette.darkMode.orange.noteFill = '#FFEDD5'
+  DefaultColorThemePalette.darkMode.orange.noteText = '#1a1a2e'
+
+  // Purple (violet slot)
+  DefaultColorThemePalette.darkMode.violet.noteFill = '#EDE9FE'
+  DefaultColorThemePalette.darkMode.violet.noteText = '#1a1a2e'
+
+  // Lavender (light-violet slot)
+  DefaultColorThemePalette.darkMode['light-violet'].noteFill = '#F3E8FF'
+  DefaultColorThemePalette.darkMode['light-violet'].noteText = '#1a1a2e'
+
+  // Plain white
+  DefaultColorThemePalette.darkMode.white.noteFill = '#FFFFFF'
+  DefaultColorThemePalette.darkMode.white.noteText = '#1a1a2e'
 }
