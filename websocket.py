@@ -52,4 +52,28 @@ class ConnectionManager:
             "data": {"user_id": user_id, "username": username}
         })
 
+    async def broadcast_todo_event(
+        self,
+        team_id: int,
+        event_type: str,
+        todo_data: dict,
+        exclude_ws: WebSocket = None
+    ):
+        """
+        Broadcast TODO changes to all connected clients in a team.
+
+        This enables real-time sync between canvas TODO shapes and backend.
+        Frontend listens for these events and updates shapes via mergeRemoteChanges().
+
+        Args:
+            team_id: Team ID to broadcast to
+            event_type: One of 'todo_created', 'todo_updated', 'todo_deleted'
+            todo_data: TODO item data (id, title, completed, due_date, etc.)
+            exclude_ws: Optional WebSocket to exclude from broadcast
+        """
+        await self.broadcast(team_id, {
+            "event": event_type,
+            "data": todo_data
+        }, exclude_ws=exclude_ws)
+
 manager = ConnectionManager()
