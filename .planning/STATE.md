@@ -10,32 +10,31 @@
 
 ## Current Position
 
-**Phase:** 3 - Drawing Tools (COMPLETE)
-**Plan:** 3 of 3 complete
-**Status:** Phase Complete
-**Last activity:** 2026-01-21 - Completed Phase 3 execution and verification
+**Phase:** 4 - Notes & Text (IN PROGRESS)
+**Plan:** 1 of 2 complete
+**Status:** In Progress
+**Last activity:** 2026-01-21 - Completed 04-01-PLAN.md (Notes and Text Configuration)
 
 ```
-[##########] Plan 3/3 in Phase 3
-[====================================>.] Phase 3 of 8
+[#####.....] Plan 1/2 in Phase 4
+[========================================>.] Phase 4 of 8
 ```
 
-**Requirements completed this phase:**
-- CANV-03: User can add basic shapes (rectangle, circle, line, arrow)
-- DRAW-01: User can draw freehand strokes with pen/marker tool
-- DRAW-02: User can erase strokes with eraser tool
-- DRAW-03: User can select from 8-12 preset colors for drawing
-- DRAW-04: User can select stroke width (thin, medium, thick)
+**Requirements progress this phase:**
+- NOTE-01: User can add sticky notes to canvas - READY (toolbar available)
+- NOTE-02: User can choose from 6-8 sticky note colors - DONE (8 colors configured)
+- NOTE-03: Sticky notes have subtle drop shadow - READY (built into tldraw)
+- NOTE-04: User can resize notes while maintaining square aspect - DONE (resizeMode='scale')
+- TEXT-01: User can add standalone text objects - READY (toolbar available)
+- TEXT-02: Double-click on note/text enters inline edit mode - READY (built into tldraw)
+- NOTE-05: Last-used note color persists across sessions - DONE (localStorage)
 
-**Success criteria achieved:**
-1. User can draw smooth freehand lines that appear instantly on canvas - DONE
-2. User can add rectangle, circle, line, and arrow shapes via toolbar - DONE
-3. User can erase specific strokes with eraser tool - DONE
-4. User can select from at least 8 distinct colors before drawing - DONE (13 colors)
-5. User can choose between at least 3 stroke widths that are visibly different - DONE (4 widths)
-
-**Deferred verification:**
-- Manual testing deferred per user request (toolbar, shortcuts, styles need visual verification)
+**Success criteria status:**
+1. User can add sticky notes via toolbar - READY (needs visual verification)
+2. User can choose from 8 sticky note colors - DONE
+3. User can resize notes with square aspect ratio - DONE
+4. User can add text objects via toolbar - READY (needs visual verification)
+5. Last-used note color persists - DONE
 
 ## Performance Metrics
 
@@ -43,8 +42,8 @@
 |--------|-------|
 | Phases completed | 3/8 |
 | Requirements done | 12/27 |
-| Current phase progress | 100% |
-| Plans completed this phase | 3/3 |
+| Current phase progress | 50% |
+| Plans completed this phase | 1/2 |
 
 ## Accumulated Context
 
@@ -87,6 +86,10 @@
 | configureStyles() at top of main.tsx | Must mutate tldraw constants before React/tldraw loads | 2026-01-21 |
 | Number keys 1-6 for core tools | select/draw/eraser/arrow/geo/highlight mapping | 2026-01-21 |
 | Default tool is select | Safe canvas opening, prevents accidental drawing | 2026-01-21 |
+| 8 sticky note colors | yellow, pink, sky blue, mint, orange, purple, lavender, white | 2026-01-21 |
+| Note text color #1a1a2e | Dark navy for readability on all pastel backgrounds | 2026-01-21 |
+| localStorage note color persistence | collabboard:note-color key with yellow default | 2026-01-21 |
+| resizeMode='scale' for notes | Aspect-locked resize for square Post-it shape | 2026-01-21 |
 
 ### Research Flags
 
@@ -95,12 +98,14 @@
 | 1 | pycrdt-websocket room lifecycle | Complete - custom RoomManager implemented |
 | 2 | tldraw Yjs integration specifics | Complete - useYjsStore hook implemented |
 | 3 | tldraw style customization | Complete - styleConfig.ts with STROKE_SIZES and color palette |
+| 4 | tldraw note/text shapes | Complete - built-in shapes with customization |
 | 8 | iOS canvas memory limits | Pending |
 
 ### TODOs
 
 - [ ] Determine tldraw licensing approach ($6K/year, watermark, or Konva.js fallback)
 - [ ] Design CRDT room persistence schema for PostgreSQL
+- [ ] Fix Y.js generic type issues in useYjsStore.ts for production build
 
 ### Blockers
 
@@ -110,20 +115,23 @@ None currently.
 
 - **tldraw licensing:** Requires $6K/year startup license OR displays watermark OR use Konva.js instead
 - **Do NOT use ypy:** Archived April 2025, use pycrdt instead
+- **Build issue:** Vite production build has Y.js generic type errors in useYjsStore.ts (Phase 2 issue)
 
 ## Session Continuity
 
-**Last session:** 2026-01-21 - Completed Phase 3 (Drawing Tools)
-**Next action:** Begin Phase 4 (Notes & Text)
+**Last session:** 2026-01-21 - Completed 04-01-PLAN.md
+**Next action:** Continue Phase 4 with 04-02-PLAN.md (if exists) or complete phase
 
 **Context for next session:**
 - Phase 1 Real-Time Infrastructure complete
 - Phase 2 Canvas Foundation complete
 - Phase 3 Drawing Tools complete
+- Phase 4 Plan 1 (Notes & Text Configuration) complete
 - Frontend Canvas component structure:
-  - Canvas.tsx: tldraw wrapper with connection status indicator, default select tool
+  - Canvas.tsx: tldraw wrapper with note config, resize mode, color persistence
   - CustomToolbar.tsx: Bottom-center toolbar with auto-hide and pin toggle
-  - styleConfig.ts: Custom stroke widths and 13-color palette
+  - styleConfig.ts: Custom stroke widths, 13-color palette, 8 note colors
+  - noteColorPersistence.ts: NEW - localStorage persistence for note color
   - useYjsStore.ts: Bidirectional sync with YKeyValue
   - useUndoManager.ts: Per-user undo via Y.UndoManager
   - cameraOptions.ts: Zoom limits and Ctrl-only scroll
@@ -133,15 +141,15 @@ None currently.
   - store.listen with source:'user' for reactive state detection
   - Global style mutation via configureStyles() before React mount
   - uiOverrides tools() for keyboard shortcut customization
-- Phase 3 features complete:
-  - Stroke widths: 2/6/12/18px for s/m/l/xl
-  - Colors: 13 colors (professional + vibrant) for light and dark modes
-  - Keyboard shortcuts: 1-6 number keys, letter shortcuts (p,e,a,r,m,l,o,v)
-  - Default tool: select (safe canvas opening)
-- Manual testing deferred: toolbar position, auto-hide, shortcuts, styles need visual verification
-- Ready for Phase 4 (Notes & Text) - sticky notes, text objects, inline editing
+  - localStorage persistence for user style preferences
+- Phase 4 Plan 1 features complete:
+  - 8 sticky note colors (yellow default, pink, sky blue, mint, orange, purple, lavender, white)
+  - Aspect-locked note resize (resizeMode='scale')
+  - Note color persistence via localStorage
+  - Type-only imports fixed for verbatimModuleSyntax
+- Manual testing deferred: toolbar, shortcuts, styles, notes need visual verification
 
 ---
 
 *State initialized: 2026-01-19*
-*Last updated: 2026-01-21 after Phase 3 completion*
+*Last updated: 2026-01-21 after 04-01 completion*
