@@ -1,8 +1,9 @@
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { Tldraw, Editor } from 'tldraw'
 import 'tldraw/tldraw.css'
 import { useYjsStore, type ConnectionStatus } from './useYjsStore'
 import { useUndoManager } from './useUndoManager'
+import { useTodoSync } from './useTodoSync'
 import { cameraOptions, handleWheel } from './cameraOptions'
 import { createUiOverrides } from './uiOverrides'
 import { toolbarComponents } from './CustomToolbar'
@@ -16,6 +17,7 @@ const customTools = [TodoTool]
 interface CanvasProps {
   boardId: string
   token: string
+  defaultListId?: number  // Backend list ID for creating new TODOs (optional)
 }
 
 /**
@@ -111,10 +113,15 @@ function UndoRedoIndicator({ canUndo, canRedo }: { canUndo: boolean; canRedo: bo
  * Note: tldraw requires a license for production use. In development/hobby
  * mode, a "Made with tldraw" watermark appears.
  */
-export function Canvas({ boardId, token }: CanvasProps) {
+export function Canvas({ boardId, token, defaultListId }: CanvasProps) {
   const { store, status, doc, yArr } = useYjsStore(boardId, token)
   const { canUndo, canRedo, undo, redo } = useUndoManager(doc, yArr)
   const editorRef = useRef<Editor | null>(null)
+  // Editor state for sync hook (set on mount)
+  const [editor, setEditor] = useState<Editor | null>(null)
+
+  // Enable TODO sync to backend when editor is ready and listId is provided
+  useTodoSync(editor, token, defaultListId ?? null)
 
   // Create UI overrides with per-user undo/redo
   const overrides = useMemo(
@@ -123,29 +130,30 @@ export function Canvas({ boardId, token }: CanvasProps) {
   )
 
   // Handle editor mount - enable snap mode, set default tool, and store reference
-  const handleMount = useCallback((editor: Editor) => {
-    editorRef.current = editor
+  const handleMount = useCallback((ed: Editor) => {
+    editorRef.current = ed
+    setEditor(ed)  // Enable TODO sync hook
 
     // Enable snap mode (grid + object snapping) per CONTEXT.md
-    editor.user.updateUserPreferences({ isSnapMode: true })
+    ed.user.updateUserPreferences({ isSnapMode: true })
 
     // Set default tool to select (safe default per CONTEXT.md)
     // Prevents accidental drawing on canvas open
-    editor.setCurrentTool('select')
+    ed.setCurrentTool('select')
 
     // Enable aspect-locked resize for notes (square Post-it shape)
     // Per RESEARCH.md: NoteShapeUtil.options.resizeMode = 'scale'
-    const noteUtil = editor.getShapeUtil('note')
+    const noteUtil = ed.getShapeUtil('note')
     if (noteUtil && 'options' in noteUtil) {
       (noteUtil as unknown as { options: { resizeMode: string } }).options.resizeMode = 'scale'
     }
 
     // Restore last-used note color from localStorage
-    restoreNoteColor(editor)
+    restoreNoteColor(ed)
 
     // Start note color persistence listener
     // Persists color changes to localStorage for session continuity
-    createNoteColorListener(editor)
+    createNoteColorListener(ed)
   }, [])
 
   // Custom wheel handler for Ctrl+scroll only zoom
