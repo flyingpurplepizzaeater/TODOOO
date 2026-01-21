@@ -114,6 +114,32 @@ export function CustomToolbar() {
       {/* tldraw's default toolbar */}
       <DefaultToolbar />
 
+      {/* TODO tool button */}
+      <button
+        onClick={() => editor.setCurrentTool('todo')}
+        title="TODO Card (T)"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: 32,
+          paddingLeft: 10,
+          paddingRight: 10,
+          border: 'none',
+          borderRadius: 6,
+          background: editor.getCurrentToolId() === 'todo' ? 'rgba(37, 99, 235, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+          color: editor.getCurrentToolId() === 'todo' ? '#fff' : '#444',
+          cursor: 'pointer',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          fontSize: 12,
+          fontWeight: 500,
+          fontFamily: 'system-ui, sans-serif',
+          transition: 'background 0.2s, color 0.2s',
+        }}
+      >
+        TODO
+      </button>
+
       {/* Frame preset dropdown */}
       <div ref={frameMenuRef} style={{ position: 'relative' }}>
         <button

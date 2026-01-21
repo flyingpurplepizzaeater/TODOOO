@@ -61,6 +61,8 @@ export function createUiOverrides(
         highlight: { ...tools.highlight, kbd: '6,m,shift+d' },  // marker/highlight tool
         line: { ...tools.line, kbd: 'l' },             // line tool
         // Note: ellipse/circle uses 'o' by default in tldraw (no override needed)
+        // Phase 5: TODO tool keyboard shortcut
+        todo: { id: 'todo', label: 'TODO Card', kbd: 't,7' },  // T for TODO, 7 continues number sequence
       }
     },
   }

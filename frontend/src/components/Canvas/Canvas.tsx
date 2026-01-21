@@ -7,6 +7,11 @@ import { cameraOptions, handleWheel } from './cameraOptions'
 import { createUiOverrides } from './uiOverrides'
 import { toolbarComponents } from './CustomToolbar'
 import { restoreNoteColor, createNoteColorListener } from './noteColorPersistence'
+import { TodoShapeUtil, TodoTool } from './shapes/todo'
+
+// Custom shape utils and tools - defined OUTSIDE component to prevent recreation
+const customShapeUtils = [TodoShapeUtil]
+const customTools = [TodoTool]
 
 interface CanvasProps {
   boardId: string
@@ -159,6 +164,8 @@ export function Canvas({ boardId, token }: CanvasProps) {
       <UndoRedoIndicator canUndo={canUndo} canRedo={canRedo} />
       <Tldraw
         store={store}
+        shapeUtils={customShapeUtils}
+        tools={customTools}
         cameraOptions={cameraOptions}
         overrides={overrides}
         components={toolbarComponents}
