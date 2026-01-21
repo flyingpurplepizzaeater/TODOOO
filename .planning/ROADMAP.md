@@ -140,6 +140,14 @@ Plans:
 4. Creating/updating a TODO card on canvas updates the backend TODO list
 5. Changes to backend TODO items reflect on canvas TODO cards
 
+**Plans:** 4 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Custom TODO shape (TodoShapeUtil, TodoCard, TodoTool, toolbar integration)
+- [ ] 05-02-PLAN.md — Bidirectional backend sync (todoApi service, useTodoSync hook)
+- [ ] 05-03-PLAN.md — Frame presets for task grouping (Kanban, Eisenhower, custom sections)
+- [ ] 05-04-PLAN.md — Manual verification of TODO integration functionality
+
 ---
 
 ## Phase 6: File Handling
@@ -210,7 +218,7 @@ Plans:
 | 2 | Canvas Foundation | CANV-01, CANV-02, CANV-04, PLAT-01 | Complete |
 | 3 | Drawing Tools | CANV-03, DRAW-01, DRAW-02, DRAW-03, DRAW-04 | Complete |
 | 4 | Notes & Text | TEXT-01, TEXT-02, TEXT-03 | Complete |
-| 5 | TODO Integration | TODO-01, TODO-02, TODO-03, TODO-04 | Not Started |
+| 5 | TODO Integration | TODO-01, TODO-02, TODO-03, TODO-04 | Planned |
 | 6 | File Handling | FILE-01, FILE-02, FILE-03 | Not Started |
 | 7 | Collaboration Polish | SYNC-01, SYNC-02 | Not Started |
 | 8 | Mobile Platform | PLAT-02, PLAT-03, PLAT-04 | Not Started |
@@ -240,4 +248,4 @@ Phase 8: Mobile Platform (depends on 2-6 stable)
 ---
 
 *Roadmap created: 2026-01-19*
-*Last updated: 2026-01-21 after Phase 4 completion*
+*Last updated: 2026-01-21 after Phase 5 planning*
