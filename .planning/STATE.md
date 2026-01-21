@@ -10,39 +10,39 @@
 
 ## Current Position
 
-**Phase:** 4 - Notes & Text (COMPLETE)
-**Plan:** 2 of 2 complete
-**Status:** Phase Complete
-**Last activity:** 2026-01-21 - Completed Phase 4 execution (manual verification deferred)
+**Phase:** 5 - TODO Integration (IN PROGRESS)
+**Plan:** 3 of 4 complete
+**Status:** In Progress
+**Last activity:** 2026-01-21 - Completed 05-03 Frame Presets plan
 
 ```
-[##########] Plan 2/2 in Phase 4
-[=============================================>.] Phase 4 of 8
+[#######...] Plan 3/4 in Phase 5
+[================================================>.] Phase 5 of 8
 ```
 
-**Requirements completed this phase:**
-- TEXT-01: User can add sticky notes with multiple color options - DONE (8 colors)
-- TEXT-02: User can add standalone text objects to canvas - DONE
-- TEXT-03: User can edit text inline by clicking - DONE (tldraw built-in)
+**Phase 5 progress:**
+- 05-01: Research - COMPLETE (TODO shapes, bidirectional sync, frames)
+- 05-02: Planning - COMPLETE (4 plans created)
+- 05-03: Frame Presets - COMPLETE (Kanban, Eisenhower, Weekly, Custom)
+- 05-04: TODO Card Shape - PENDING
 
-**Success criteria achieved:**
-1. User can add sticky notes via toolbar - DONE
-2. User can choose from 8 sticky note colors - DONE
-3. User can add text objects that are not contained in sticky notes - DONE
-4. Double-click enters inline edit mode directly on canvas - DONE
-5. Text edits sync to collaborators in real-time - DONE (via Yjs)
+**Requirements for this phase:**
+- TODO-01: User can add TODO cards with title/status/due date/assignee - PENDING
+- TODO-02: User can mark tasks complete with visual feedback - PENDING
+- TODO-03: User can organize TODOs into visual sections (frames) - DONE (frames ready)
+- TODO-04: TODO changes sync bidirectionally with backend - PENDING
 
 **Deferred verification:**
-- Manual testing deferred per user request (Phases 3 and 4 need visual verification)
+- Manual testing deferred per user request (Phases 3, 4, and 5 need visual verification)
 
 ## Performance Metrics
 
 | Metric | Value |
 |--------|-------|
-| Phases completed | 4/8 |
-| Requirements done | 15/27 |
-| Current phase progress | 100% |
-| Plans completed this phase | 2/2 |
+| Phases completed | 4/8 (Phase 5 in progress) |
+| Requirements done | 16/27 |
+| Current phase progress | 75% (3/4 plans) |
+| Plans completed this phase | 3/4 |
 
 ## Accumulated Context
 
@@ -89,6 +89,8 @@
 | Note text color #1a1a2e | Dark navy for readability on all pastel backgrounds | 2026-01-21 |
 | localStorage note color persistence | collabboard:note-color key with yellow default | 2026-01-21 |
 | resizeMode='scale' for notes | Aspect-locked resize for square Post-it shape | 2026-01-21 |
+| Dropdown for frame presets | Space-efficient UI, keeps toolbar compact | 2026-01-21 |
+| Viewport-center frame placement | Presets visible immediately after creation | 2026-01-21 |
 
 ### Research Flags
 
@@ -98,6 +100,7 @@
 | 2 | tldraw Yjs integration specifics | Complete - useYjsStore hook implemented |
 | 3 | tldraw style customization | Complete - styleConfig.ts with STROKE_SIZES and color palette |
 | 4 | tldraw note/text shapes | Complete - built-in shapes with customization |
+| 5 | tldraw custom shapes & bidirectional sync | Complete - BaseBoxShapeUtil, store.listen, mergeRemoteChanges patterns |
 | 8 | iOS canvas memory limits | Pending |
 
 ### TODOs
@@ -118,18 +121,20 @@ None currently.
 
 ## Session Continuity
 
-**Last session:** 2026-01-21 - Completed Phase 4 (Notes & Text)
-**Next action:** Begin Phase 5 (TODO Integration)
+**Last session:** 2026-01-21 - Completed 05-03 Frame Presets plan
+**Next action:** Execute 05-04 TODO Card Shape plan
 
 **Context for next session:**
 - Phase 1 Real-Time Infrastructure complete
 - Phase 2 Canvas Foundation complete
 - Phase 3 Drawing Tools complete
 - Phase 4 Notes & Text complete
+- Phase 5 TODO Integration in progress (3/4 plans complete)
 - Frontend Canvas component structure:
   - Canvas.tsx: tldraw wrapper with note config, resize mode, color persistence
-  - CustomToolbar.tsx: Bottom-center toolbar with auto-hide and pin toggle
+  - CustomToolbar.tsx: Bottom-center toolbar with auto-hide, pin toggle, and Frames dropdown
   - styleConfig.ts: Custom stroke widths, 13-color palette, 8 note colors
+  - framePresets.ts: Kanban, Eisenhower, Weekly, Custom frame creators
   - noteColorPersistence.ts: localStorage persistence for note color
   - useYjsStore.ts: Bidirectional sync with YKeyValue
   - useUndoManager.ts: Per-user undo via Y.UndoManager
@@ -141,16 +146,15 @@ None currently.
   - Global style mutation via configureStyles() before React mount
   - uiOverrides tools() for keyboard shortcut customization
   - localStorage persistence for user style preferences
-- Phase 4 features complete:
-  - 8 sticky note colors (yellow default, pink, sky blue, mint, orange, purple, lavender, white)
-  - Aspect-locked note resize (resizeMode='scale')
-  - Note color persistence via localStorage
-  - Standalone text objects via toolbar
-  - Inline editing (double-click to edit)
-- Manual testing deferred: Phases 3 and 4 need visual verification
-- Ready for Phase 5 (TODO Integration) - TODO cards, status, sections, backend sync
+  - Frame presets via editor.createShape({ type: 'frame' })
+  - Dropdown menus with click-outside dismiss pattern
+- Phase 5 progress:
+  - Frame presets: Kanban (3 columns), Eisenhower (2x2), Weekly (Mon-Fri), Custom
+  - Frames dropdown in toolbar with getViewportCenter placement
+  - Next: Custom TodoShapeUtil with BaseBoxShapeUtil pattern
+- Manual testing deferred: Phases 3, 4, and 5 need visual verification
 
 ---
 
 *State initialized: 2026-01-19*
-*Last updated: 2026-01-21 after Phase 4 completion*
+*Last updated: 2026-01-21 after 05-03 Frame Presets completion*
