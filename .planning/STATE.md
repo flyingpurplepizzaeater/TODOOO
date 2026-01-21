@@ -11,18 +11,18 @@
 ## Current Position
 
 **Phase:** 5 - TODO Integration (IN PROGRESS)
-**Plan:** 2 of 4 complete (Wave 1 complete, Waves 2-3 pending)
+**Plan:** 3 of 4 complete (Waves 1-2 complete, Wave 3 pending)
 **Status:** In Progress
-**Last activity:** 2026-01-21 - Completed 05-01 TODO Card Shape plan
+**Last activity:** 2026-01-21 - Completed 05-02 Backend Sync plan
 
 ```
-[#####.....] Plan 2/4 in Phase 5
+[########..] Plan 3/4 in Phase 5
 [================================================>.] Phase 5 of 8
 ```
 
 **Phase 5 progress:**
 - 05-01: TODO Card Shape - COMPLETE (TodoShapeUtil, TodoCard, toolbar integration)
-- 05-02: Backend Sync - PENDING (Wave 2)
+- 05-02: Backend Sync - COMPLETE (todoApi, useTodoSync, WebSocket broadcast)
 - 05-03: Frame Presets - COMPLETE (Kanban, Eisenhower, Weekly, Custom)
 - 05-04: Task Status Visualization - PENDING (Wave 3)
 
@@ -30,7 +30,7 @@
 - TODO-01: User can add TODO cards with title/status/due date/assignee - DONE (via TODO shape)
 - TODO-02: User can mark tasks complete with visual feedback - DONE (checkbox, green tint, strikethrough)
 - TODO-03: User can organize TODOs into visual sections (frames) - DONE (frames ready)
-- TODO-04: TODO changes sync bidirectionally with backend - PENDING (05-02)
+- TODO-04: TODO changes sync bidirectionally with backend - DONE (05-02 useTodoSync)
 
 **Deferred verification:**
 - Manual testing deferred per user request (Phases 3, 4, and 5 need visual verification)
@@ -40,9 +40,9 @@
 | Metric | Value |
 |--------|-------|
 | Phases completed | 4/8 (Phase 5 in progress) |
-| Requirements done | 18/27 |
-| Current phase progress | 50% (2/4 plans) |
-| Plans completed this phase | 2/4 |
+| Requirements done | 19/27 |
+| Current phase progress | 75% (3/4 plans) |
+| Plans completed this phase | 3/4 |
 
 ## Accumulated Context
 
@@ -95,6 +95,10 @@
 | Free resize for TODO cards | Per CONTEXT.md, not aspect-locked like notes | 2026-01-21 |
 | isPast + isToday for overdue | Overdue = past due date AND not today | 2026-01-21 |
 | Shape utils outside component | Const arrays prevent recreation on render | 2026-01-21 |
+| source:'user' + mergeRemoteChanges | Combined pattern prevents bidirectional sync echo loops | 2026-01-21 |
+| 500ms debounce on TODO updates | Prevents excessive API calls during rapid edits | 2026-01-21 |
+| CustomEvent 'todo-sync' | Bridge WebSocket events to React component tree | 2026-01-21 |
+| defaultListId optional prop | Sync disabled if not provided, graceful degradation | 2026-01-21 |
 
 ### Research Flags
 
@@ -125,26 +129,29 @@ None currently.
 
 ## Session Continuity
 
-**Last session:** 2026-01-21 - Completed 05-01 TODO Card Shape plan
-**Next action:** Execute 05-02 Backend Sync plan (Wave 2)
+**Last session:** 2026-01-21 - Completed 05-02 Backend Sync plan
+**Next action:** Execute 05-04 Task Status Visualization plan (Wave 3)
 
 **Context for next session:**
 - Phase 1 Real-Time Infrastructure complete
 - Phase 2 Canvas Foundation complete
 - Phase 3 Drawing Tools complete
 - Phase 4 Notes & Text complete
-- Phase 5 TODO Integration in progress (2/4 plans complete - Wave 1 done)
+- Phase 5 TODO Integration in progress (3/4 plans complete - Waves 1-2 done)
 - Frontend Canvas component structure:
-  - Canvas.tsx: tldraw wrapper with note config, resize mode, color persistence, TODO shape/tool
+  - Canvas.tsx: tldraw wrapper with note config, resize mode, color persistence, TODO shape/tool, useTodoSync
   - CustomToolbar.tsx: Bottom-center toolbar with auto-hide, pin toggle, Frames dropdown, TODO button
   - styleConfig.ts: Custom stroke widths, 13-color palette, 8 note colors
   - framePresets.ts: Kanban, Eisenhower, Weekly, Custom frame creators
   - noteColorPersistence.ts: localStorage persistence for note color
   - useYjsStore.ts: Bidirectional sync with YKeyValue
   - useUndoManager.ts: Per-user undo via Y.UndoManager
+  - useTodoSync.ts: Bidirectional TODO sync with backend API (new in 05-02)
   - cameraOptions.ts: Zoom limits and Ctrl-only scroll
   - uiOverrides.ts: Complete keyboard shortcuts for all tools including T/7 for TODO
-  - shapes/todo/: TodoShapeUtil, TodoTool, TodoCard, types (new in 05-01)
+  - shapes/todo/: TodoShapeUtil, TodoTool, TodoCard, types
+- New services layer:
+  - services/todoApi.ts: Backend API client (createTodo, updateTodo, deleteTodo, toggleTodo)
 - Key patterns established:
   - TLComponents for toolbar replacement
   - store.listen with source:'user' for reactive state detection
@@ -155,15 +162,18 @@ None currently.
   - Dropdown menus with click-outside dismiss pattern
   - Custom shape: types.ts -> Component.tsx -> ShapeUtil.tsx -> Tool.ts -> index.ts
   - Shape/tool registration outside component (const customShapeUtils = [...])
+  - Bidirectional sync: store.listen + mergeRemoteChanges combo for echo prevention
+  - WebSocket-to-React: CustomEvent dispatch pattern
 - Phase 5 progress:
   - Frame presets: Kanban (3 columns), Eisenhower (2x2), Weekly (Mon-Fri), Custom
   - TODO shape: TodoShapeUtil with checkbox, priority border, overdue styling
   - TODO tool: Click-to-create with select tool switch
   - Toolbar: TODO button + Frames dropdown
-  - Next: Backend sync for TODO shapes (05-02)
+  - Backend sync: useTodoSync with debounced updates, echo loop prevention
+  - Next: Task status visualization (05-04)
 - Manual testing deferred: Phases 3, 4, and 5 need visual verification
 
 ---
 
 *State initialized: 2026-01-19*
-*Last updated: 2026-01-21 after 05-01 TODO Card Shape completion*
+*Last updated: 2026-01-21 after 05-02 Backend Sync completion*
