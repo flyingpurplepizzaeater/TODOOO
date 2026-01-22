@@ -27,8 +27,8 @@
 
 ### Real-Time Collaboration
 
-- [ ] **SYNC-01**: User sees other collaborators' cursors with username labels in real-time
-- [ ] **SYNC-02**: User sees presence indicator showing who's online
+- [x] **SYNC-01**: User sees other collaborators' cursors with username labels in real-time
+- [x] **SYNC-02**: User sees presence indicator showing who's online
 - [x] **SYNC-03**: Changes sync to all collaborators within 200ms
 - [x] **SYNC-04**: User can share board via link (team-based or public)
 - [x] **SYNC-05**: Connection automatically reconnects and syncs after network drops
@@ -115,8 +115,8 @@ Explicitly excluded from this project:
 | TEXT-01 | Phase 4 | Complete |
 | TEXT-02 | Phase 4 | Complete |
 | TEXT-03 | Phase 4 | Complete |
-| SYNC-01 | Phase 7 | Pending |
-| SYNC-02 | Phase 7 | Pending |
+| SYNC-01 | Phase 7 | Complete |
+| SYNC-02 | Phase 7 | Complete |
 | SYNC-03 | Phase 1 | Complete |
 | SYNC-04 | Phase 1 | Complete |
 | SYNC-05 | Phase 1 | Complete |
@@ -139,4 +139,4 @@ Explicitly excluded from this project:
 
 ---
 *Requirements defined: 2026-01-19*
-*Last updated: 2026-01-22 after Phase 6 completion*
+*Last updated: 2026-01-22 after Phase 7 completion*
