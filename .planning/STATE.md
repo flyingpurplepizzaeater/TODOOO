@@ -11,18 +11,18 @@
 ## Current Position
 
 **Phase:** 7 - Collaboration Polish (IN PROGRESS)
-**Plan:** 1 of 3 complete
+**Plan:** 2 of 3 complete
 **Status:** In Progress
-**Last activity:** 2026-01-22 - Completed 07-01 Awareness Foundation
+**Last activity:** 2026-01-22 - Completed 07-02 Cursor Rendering
 
 ```
-[###.......] Plan 1/3 in Phase 7
+[######....] Plan 2/3 in Phase 7
 [=========================================================================.] Phase 7 of 8
 ```
 
 **Phase 7 progress:**
 - 07-01: Awareness Foundation - COMPLETE (useAwareness hook, color palette, TLInstancePresence sync)
-- 07-02: Cursor Rendering - PENDING
+- 07-02: Cursor Rendering - COMPLETE (DotCursor, CollaboratorIndicator, TLComponents config)
 - 07-03: Presence Panel - PENDING
 
 **Phase 6 (COMPLETE):**
@@ -38,9 +38,9 @@
 | Metric | Value |
 |--------|-------|
 | Phases completed | 6/8 |
-| Requirements done | 22/27 |
-| Current phase progress | 33% |
-| Plans completed this phase | 1/3 |
+| Requirements done | 23/27 |
+| Current phase progress | 67% |
+| Plans completed this phase | 2/3 |
 
 ## Accumulated Context
 
@@ -112,6 +112,10 @@
 | requestAnimationFrame for pointer tracking | More reliable than store listeners for continuous cursor updates | 2026-01-22 |
 | 12-color palette with djb2 hash | Deterministic color from userId ensures consistency across clients | 2026-01-22 |
 | 50ms throttle for cursor updates | Balances smoothness (20 fps) with network efficiency | 2026-01-22 |
+| 18px base cursor size | Middle of CONTEXT.md's 16-20px range with zoom compensation | 2026-01-22 |
+| Username label on hover only | Keeps canvas clean, reveals on hover per CONTEXT.md | 2026-01-22 |
+| TLComponents override for cursor | CollaboratorCursor -> DotCursor for custom dot shape | 2026-01-22 |
+| selectedShapeIds in presence | Enables tldraw CollaboratorShapeIndicator rendering | 2026-01-22 |
 
 ### Research Flags
 
@@ -144,35 +148,30 @@ None currently.
 
 ## Session Continuity
 
-**Last session:** 2026-01-22 - Completed 07-01 Awareness Foundation
-**Next action:** Continue Phase 7 with 07-02 Cursor Rendering
+**Last session:** 2026-01-22 - Completed 07-02 Cursor Rendering
+**Next action:** Continue Phase 7 with 07-03 Presence Panel
 
 **Context for next session:**
-- Phases 1-6 complete, Phase 7 Plan 1 complete
-- 07-01 Awareness Foundation complete:
-  - useAwareness hook for cursor/presence sync
-  - 12-color COLLABORATOR_COLORS palette
-  - colorFromUserId() for deterministic color assignment
-  - AwarenessState type definition
-  - TLInstancePresence sync via mergeRemoteChanges
-  - Provider exposed from useYjsStore
-  - Canvas integration with mouse leave handler
+- Phases 1-6 complete, Phase 7 Plans 1-2 complete
+- 07-02 Cursor Rendering complete:
+  - DotCursor component: 18px dot with zoom compensation
+  - CollaboratorIndicator: Selection outlines with username labels
+  - TLComponents configuration: CollaboratorCursor + CollaboratorShapeIndicator
+  - selectedShapeIds synced in TLInstancePresence
 - Frontend collaboration structure:
-  - collaboration/types.ts: AwarenessState interface
-  - collaboration/collaboratorColors.ts: Palette and color functions
-  - collaboration/useAwareness.ts: Main awareness hook
-  - collaboration/index.ts: Barrel export
-  - Canvas.tsx: useAwareness integration
-  - useYjsStore.ts: Provider ref exposed
+  - collaboration/DotCursor.tsx: Custom dot cursor component
+  - collaboration/CollaboratorIndicator.tsx: Selection indicator with label
+  - collaboration/useAwareness.ts: Now includes selectedShapeIds sync
+  - collaboration/index.ts: Updated exports
+  - Canvas.tsx: canvasComponents with collaboration overrides
 - Key patterns established:
-  - Null-safe hook pattern (null options = empty result)
-  - requestAnimationFrame for pointer tracking
-  - Awareness to TLInstancePresence conversion
-  - djb2 hash for deterministic user colors
+  - TLComponents override for cursor/indicator customization
+  - Zoom-compensated sizing: size / zoom for consistent screen appearance
+  - Username label on hover via useState
 - Manual testing deferred: Phases 3, 4, 5, 6, and 7 need visual verification
-- Next: 07-02 custom dot cursor component
+- Next: 07-03 Presence Panel integration testing
 
 ---
 
 *State initialized: 2026-01-19*
-*Last updated: 2026-01-22 after 07-01 completion*
+*Last updated: 2026-01-22 after 07-02 completion*
