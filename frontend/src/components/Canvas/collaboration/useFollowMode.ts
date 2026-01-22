@@ -73,9 +73,11 @@ export function useFollowMode(editor: Editor | null) {
     if (!editor || !followState.isFollowing) return
 
     const handleCameraChange = () => {
-      // Check if tldraw still considers us to be following
-      const isFollowing = editor.getIsFollowingUser()
-      if (!isFollowing && followState.isFollowing) {
+      // Check if tldraw still considers us to be following via instance state
+      // When user pans/zooms manually, tldraw clears the followingUserId
+      const instance = editor.getInstanceState()
+      const tldrawFollowing = instance.followingUserId
+      if (!tldrawFollowing && followState.isFollowing) {
         // User manually panned/zoomed, update our state
         setFollowState({
           isFollowing: false,

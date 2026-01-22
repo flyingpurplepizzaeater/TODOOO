@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { AwarenessState } from './types'
 import { CollaboratorItem } from './CollaboratorItem'
 
@@ -37,19 +37,21 @@ export function PresenceSidebar({
 }: PresenceSidebarProps) {
   // Responsive: collapsed on mobile, open on desktop
   const [isOpen, setIsOpen] = useState(() => window.innerWidth >= MOBILE_BREAKPOINT)
-  const [isMobile, setIsMobile] = useState(() => window.innerWidth < MOBILE_BREAKPOINT)
+  // Track previous mobile state in ref to detect transitions
+  const wasMobileRef = useRef(window.innerWidth < MOBILE_BREAKPOINT)
 
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
-      const mobile = window.innerWidth < MOBILE_BREAKPOINT
-      setIsMobile(prevMobile => {
-        // Auto-collapse when transitioning to mobile
-        if (mobile && !prevMobile) setIsOpen(false)
-        // Auto-open when transitioning to desktop
-        if (!mobile && prevMobile) setIsOpen(true)
-        return mobile
-      })
+      const isMobile = window.innerWidth < MOBILE_BREAKPOINT
+      const wasMobile = wasMobileRef.current
+
+      // Auto-collapse when transitioning to mobile
+      if (isMobile && !wasMobile) setIsOpen(false)
+      // Auto-open when transitioning to desktop
+      if (!isMobile && wasMobile) setIsOpen(true)
+
+      wasMobileRef.current = isMobile
     }
 
     window.addEventListener('resize', handleResize)
