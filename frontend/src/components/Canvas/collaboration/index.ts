@@ -25,3 +25,5 @@ export { useFollowMode } from './useFollowMode'
 
 // Components
 export { DotCursor } from './DotCursor'
+export { CollaboratorItem } from './CollaboratorItem'
+export { PresenceSidebar } from './PresenceSidebar'
