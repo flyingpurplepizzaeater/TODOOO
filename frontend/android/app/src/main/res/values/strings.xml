@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">TODOOO</string>
+    <string name="title_activity_main">TODOOO</string>
+    <string name="package_name">com.collabboard.todooo</string>
+    <string name="custom_url_scheme">com.collabboard.todooo</string>
+</resources>
