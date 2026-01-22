@@ -10,27 +10,27 @@
 
 ## Current Position
 
-**Phase:** 5 - TODO Integration (COMPLETE)
-**Plan:** 4 of 4 complete
-**Status:** Phase Complete
-**Last activity:** 2026-01-22 - Completed Phase 5 execution (manual verification deferred)
+**Phase:** 6 - File Handling (IN PROGRESS)
+**Plan:** 1 of 4 complete
+**Status:** In Progress
+**Last activity:** 2026-01-22 - Completed 06-01 Asset Store Foundation
 
 ```
-[##########] Plan 4/4 in Phase 5
-[======================================================>.] Phase 5 of 8
+[##........] Plan 1/4 in Phase 6
+[============================================================>.] Phase 6 of 8
 ```
 
-**Phase 5 progress:**
-- 05-01: TODO Card Shape - COMPLETE (TodoShapeUtil, TodoCard, toolbar integration)
-- 05-02: Backend Sync - COMPLETE (todoApi, useTodoSync, WebSocket broadcast)
-- 05-03: Frame Presets - COMPLETE (Kanban, Eisenhower, Weekly, Custom)
-- 05-04: Manual Verification - COMPLETE (deferred to project completion)
+**Phase 6 progress:**
+- 06-01: Asset Store Foundation - COMPLETE (presigned URL endpoint, TLAssetStore)
+- 06-02: Image Upload UI - PENDING
+- 06-03: Export PNG/PDF - PENDING
+- 06-04: Manual Verification - PENDING
 
-**Requirements completed this phase:**
-- TODO-01: User can add TODO cards with title/status/due date/assignee - DONE (via TODO shape)
-- TODO-02: User can mark tasks complete with visual feedback - DONE (checkbox, green tint, strikethrough)
-- TODO-03: User can organize TODOs into visual sections (frames) - DONE (4 frame presets)
-- TODO-04: TODO changes sync bidirectionally with backend - DONE (useTodoSync)
+**Requirements in progress:**
+- FILE-01: User can upload images via button/paste/drag-drop - IN PROGRESS (foundation ready)
+- FILE-02: Images persist and sync across collaborators - IN PROGRESS (asset store ready)
+- FILE-03: User can export canvas as PNG - PENDING
+- FILE-04: User can export canvas as PDF - PENDING
 
 **Deferred verification:**
 - Manual testing deferred per user request (Phases 3, 4, and 5 need visual verification)
@@ -41,8 +41,8 @@
 |--------|-------|
 | Phases completed | 5/8 |
 | Requirements done | 19/27 |
-| Current phase progress | 100% |
-| Plans completed this phase | 4/4 |
+| Current phase progress | 25% |
+| Plans completed this phase | 1/4 |
 
 ## Accumulated Context
 
@@ -99,6 +99,10 @@
 | 500ms debounce on TODO updates | Prevents excessive API calls during rapid edits | 2026-01-21 |
 | CustomEvent 'todo-sync' | Bridge WebSocket events to React component tree | 2026-01-21 |
 | defaultListId optional prop | Sync disabled if not provided, graceful degradation | 2026-01-21 |
+| Lazy boto3 import | Backend doesn't fail on startup if boto3 not installed | 2026-01-22 |
+| assetStore via createTLStore | tldraw v4 requires assets in store options, not Tldraw prop | 2026-01-22 |
+| Key format: boards/{id}/{uuid}/{file} | Prevents filename collisions in MinIO | 2026-01-22 |
+| 1-hour presigned URL expiry | Balances usability with security for uploads | 2026-01-22 |
 
 ### Research Flags
 
@@ -109,6 +113,7 @@
 | 3 | tldraw style customization | Complete - styleConfig.ts with STROKE_SIZES and color palette |
 | 4 | tldraw note/text shapes | Complete - built-in shapes with customization |
 | 5 | tldraw custom shapes & bidirectional sync | Complete - BaseBoxShapeUtil, store.listen, mergeRemoteChanges patterns |
+| 6 | tldraw image upload & TLAssetStore | Complete - presigned URLs, createAssetStore pattern |
 | 8 | iOS canvas memory limits | Pending |
 
 ### TODOs
@@ -129,52 +134,32 @@ None currently.
 
 ## Session Continuity
 
-**Last session:** 2026-01-22 - Completed Phase 5 (TODO Integration)
-**Next action:** Begin Phase 6 (File Handling)
+**Last session:** 2026-01-22 - Completed Plan 06-01 (Asset Store Foundation)
+**Next action:** Execute Plan 06-02 (Image Upload UI)
 
 **Context for next session:**
-- Phase 1 Real-Time Infrastructure complete
-- Phase 2 Canvas Foundation complete
-- Phase 3 Drawing Tools complete
-- Phase 4 Notes & Text complete
-- Phase 5 TODO Integration complete
-- Frontend Canvas component structure:
-  - Canvas.tsx: tldraw wrapper with note config, resize mode, color persistence, TODO shape/tool, useTodoSync
-  - CustomToolbar.tsx: Bottom-center toolbar with auto-hide, pin toggle, Frames dropdown, TODO button
-  - styleConfig.ts: Custom stroke widths, 13-color palette, 8 note colors
-  - framePresets.ts: Kanban, Eisenhower, Weekly, Custom frame creators
-  - noteColorPersistence.ts: localStorage persistence for note color
-  - useYjsStore.ts: Bidirectional sync with YKeyValue
-  - useUndoManager.ts: Per-user undo via Y.UndoManager
-  - useTodoSync.ts: Bidirectional TODO sync with backend API
-  - cameraOptions.ts: Zoom limits and Ctrl-only scroll
-  - uiOverrides.ts: Complete keyboard shortcuts for all tools including T/7 for TODO
-  - shapes/todo/: TodoShapeUtil, TodoTool, TodoCard, types
-- Services layer:
-  - services/todoApi.ts: Backend API client (createTodo, updateTodo, deleteTodo, toggleTodo)
+- Phases 1-5 complete (Real-Time, Canvas, Drawing, Notes, TODO)
+- Phase 6 Plan 1 complete - Asset store foundation ready
+- Frontend file handling infrastructure:
+  - fileHandling/useAssetStore.ts: TLAssetStore for MinIO uploads
+  - services/storageApi.ts: Presigned URL API client
+  - useYjsStore.ts: Now accepts assetStore parameter
+  - Canvas.tsx: Creates and wires up assetStore
+- Backend file handling infrastructure:
+  - config.py: MinIO configuration (MINIO_URL, MINIO_ACCESS_KEY, etc.)
+  - schemas.py: UploadUrlRequest/UploadUrlResponse
+  - routers/boards.py: POST /{board_id}/upload-url endpoint
 - Key patterns established:
-  - TLComponents for toolbar replacement
-  - store.listen with source:'user' for reactive state detection
-  - Global style mutation via configureStyles() before React mount
-  - uiOverrides tools() for keyboard shortcut customization
-  - localStorage persistence for user style preferences
-  - Frame presets via editor.createShape({ type: 'frame' })
-  - Dropdown menus with click-outside dismiss pattern
-  - Custom shape: types.ts -> Component.tsx -> ShapeUtil.tsx -> Tool.ts -> index.ts
-  - Shape/tool registration outside component (const customShapeUtils = [...])
-  - Bidirectional sync: store.listen + mergeRemoteChanges combo for echo prevention
-  - WebSocket-to-React: CustomEvent dispatch pattern
-- Phase 5 features complete:
-  - TODO cards with title, checkbox, due date, assignee, priority
-  - Completion styling (green tint, checkmark, strikethrough)
-  - Overdue styling (red border, red date text)
-  - Priority borders (red/yellow/blue for high/medium/low)
-  - Frame presets: Kanban (3 columns), Eisenhower (2x2), Weekly (Mon-Fri), Custom
-  - Bidirectional backend sync with 500ms debounce and echo prevention
-- Manual testing deferred: Phases 3, 4, and 5 need visual verification
-- Ready for Phase 6 (File Handling) - image upload/paste, PNG/PDF export
+  - Presigned URL pattern: client requests URL, uploads directly to MinIO
+  - TLAssetStore via createTLStore (not Tldraw prop)
+  - Lazy boto3 import for graceful degradation
+- Phase 6 remaining work:
+  - 06-02: Image upload UI (toolbar button, paste, drag-drop)
+  - 06-03: Export functionality (PNG, PDF)
+  - 06-04: Manual verification
+- Manual testing deferred: Phases 3, 4, 5, and 6 need visual verification
 
 ---
 
 *State initialized: 2026-01-19*
-*Last updated: 2026-01-22 after Phase 5 completion*
+*Last updated: 2026-01-22 after Plan 06-01 completion*
