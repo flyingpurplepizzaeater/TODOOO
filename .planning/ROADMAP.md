@@ -220,7 +220,14 @@ Plans:
 4. User can draw with finger/stylus touch
 5. All Phase 2-6 features work in mobile apps without degradation
 
-**Research Notes:** May need research on iOS canvas memory limits and Capacitor WebView optimization.
+**Plans:** 5 plans
+
+Plans:
+- [ ] 08-01-PLAN.md — Capacitor setup (packages, config, iOS/Android platforms)
+- [ ] 08-02-PLAN.md — Touch gesture configuration (pinch zoom, finger draw, stylus support)
+- [ ] 08-03-PLAN.md — App lifecycle and offline caching (WebSocket reconnection, 10-board cache)
+- [ ] 08-04-PLAN.md — Native features (camera capture, notifications, Photos/Files export)
+- [ ] 08-05-PLAN.md — Native builds and verification (icons, splash, TestFlight/APK)
 
 ---
 
@@ -235,7 +242,7 @@ Plans:
 | 5 | TODO Integration | TODO-01, TODO-02, TODO-03, TODO-04 | Complete |
 | 6 | File Handling | FILE-01, FILE-02, FILE-03 | Complete |
 | 7 | Collaboration Polish | SYNC-01, SYNC-02 | Complete |
-| 8 | Mobile Platform | PLAT-02, PLAT-03, PLAT-04 | Not Started |
+| 8 | Mobile Platform | PLAT-02, PLAT-03, PLAT-04 | Planned |
 
 **Coverage:** 27/27 requirements mapped
 
@@ -262,4 +269,4 @@ Phase 8: Mobile Platform (depends on 2-6 stable)
 ---
 
 *Roadmap created: 2026-01-19*
-*Last updated: 2026-01-22 after Phase 7 completion*
+*Last updated: 2026-01-23 after Phase 8 planning*
