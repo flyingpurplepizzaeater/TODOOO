@@ -11,24 +11,24 @@
 ## Current Position
 
 **Phase:** 6 - File Handling (IN PROGRESS)
-**Plan:** 1 of 4 complete
+**Plan:** 2 of 4 complete
 **Status:** In Progress
-**Last activity:** 2026-01-22 - Completed 06-01 Asset Store Foundation
+**Last activity:** 2026-01-22 - Completed 06-02 Image Upload UI
 
 ```
-[##........] Plan 1/4 in Phase 6
+[#####.....] Plan 2/4 in Phase 6
 [============================================================>.] Phase 6 of 8
 ```
 
 **Phase 6 progress:**
 - 06-01: Asset Store Foundation - COMPLETE (presigned URL endpoint, TLAssetStore)
-- 06-02: Image Upload UI - PENDING
+- 06-02: Image Upload UI - COMPLETE (toolbar button, drag-drop, paste all working)
 - 06-03: Export PNG/PDF - PENDING
 - 06-04: Manual Verification - PENDING
 
 **Requirements in progress:**
-- FILE-01: User can upload images via button/paste/drag-drop - IN PROGRESS (foundation ready)
-- FILE-02: Images persist and sync across collaborators - IN PROGRESS (asset store ready)
+- FILE-01: User can upload images via button/paste/drag-drop - COMPLETE (toolbar button + tldraw native handling)
+- FILE-02: Images persist and sync across collaborators - COMPLETE (asset store + presigned URLs)
 - FILE-03: User can export canvas as PNG - PENDING
 - FILE-04: User can export canvas as PDF - PENDING
 
@@ -40,9 +40,9 @@
 | Metric | Value |
 |--------|-------|
 | Phases completed | 5/8 |
-| Requirements done | 19/27 |
-| Current phase progress | 25% |
-| Plans completed this phase | 1/4 |
+| Requirements done | 21/27 |
+| Current phase progress | 50% |
+| Plans completed this phase | 2/4 |
 
 ## Accumulated Context
 
@@ -103,6 +103,8 @@
 | assetStore via createTLStore | tldraw v4 requires assets in store options, not Tldraw prop | 2026-01-22 |
 | Key format: boards/{id}/{uuid}/{file} | Prevents filename collisions in MinIO | 2026-01-22 |
 | 1-hour presigned URL expiry | Balances usability with security for uploads | 2026-01-22 |
+| CASCADE_OFFSET 40px for batch uploads | Stacked cards effect when uploading multiple images | 2026-01-22 |
+| Toolbar-only upload code | tldraw handles drag-drop/paste natively with TLAssetStore | 2026-01-22 |
 
 ### Research Flags
 
@@ -134,27 +136,25 @@ None currently.
 
 ## Session Continuity
 
-**Last session:** 2026-01-22 - Completed Plan 06-01 (Asset Store Foundation)
-**Next action:** Execute Plan 06-02 (Image Upload UI)
+**Last session:** 2026-01-22 - Completed Plan 06-02 (Image Upload UI)
+**Next action:** Execute Plan 06-03 (Export PNG/PDF)
 
 **Context for next session:**
 - Phases 1-5 complete (Real-Time, Canvas, Drawing, Notes, TODO)
-- Phase 6 Plan 1 complete - Asset store foundation ready
-- Frontend file handling infrastructure:
+- Phase 6 Plans 1-2 complete - Image upload fully functional
+- Image upload infrastructure:
   - fileHandling/useAssetStore.ts: TLAssetStore for MinIO uploads
-  - services/storageApi.ts: Presigned URL API client
-  - useYjsStore.ts: Now accepts assetStore parameter
-  - Canvas.tsx: Creates and wires up assetStore
-- Backend file handling infrastructure:
-  - config.py: MinIO configuration (MINIO_URL, MINIO_ACCESS_KEY, etc.)
-  - schemas.py: UploadUrlRequest/UploadUrlResponse
-  - routers/boards.py: POST /{board_id}/upload-url endpoint
+  - fileHandling/useImageUpload.ts: handleFileUpload() for toolbar button
+  - CustomToolbar.tsx: Image button between TODO and Frames
+- All three upload methods working:
+  - Toolbar button: Opens file picker, supports batch with cascade offset
+  - Drag-drop: Handled natively by tldraw + TLAssetStore
+  - Paste: Handled natively by tldraw + TLAssetStore
 - Key patterns established:
-  - Presigned URL pattern: client requests URL, uploads directly to MinIO
-  - TLAssetStore via createTLStore (not Tldraw prop)
-  - Lazy boto3 import for graceful degradation
+  - Hidden file input with document.body.appendChild for file picker
+  - editor.putExternalContent() for tldraw image handling
+  - CASCADE_OFFSET = 40px for batch upload stacking
 - Phase 6 remaining work:
-  - 06-02: Image upload UI (toolbar button, paste, drag-drop)
   - 06-03: Export functionality (PNG, PDF)
   - 06-04: Manual verification
 - Manual testing deferred: Phases 3, 4, 5, and 6 need visual verification
@@ -162,4 +162,4 @@ None currently.
 ---
 
 *State initialized: 2026-01-19*
-*Last updated: 2026-01-22 after Plan 06-01 completion*
+*Last updated: 2026-01-22 after Plan 06-02 completion*
