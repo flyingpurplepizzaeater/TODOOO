@@ -17,5 +17,6 @@ export {
   colorFromIndex,
 } from './collaboratorColors'
 
-// Hooks (will be added in Task 2)
-// export { useAwareness } from './useAwareness'
+// Hooks
+export { useAwareness } from './useAwareness'
+export type { UseAwarenessOptions, UseAwarenessResult } from './useAwareness'

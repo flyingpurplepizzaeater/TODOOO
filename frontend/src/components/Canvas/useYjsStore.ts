@@ -2,19 +2,21 @@ import { useEffect, useRef, useState } from 'react'
 import { createTLStore, defaultShapeUtils, type TLRecord, type TLStoreWithStatus, type TLAssetStore } from 'tldraw'
 import * as Y from 'yjs'
 import { YKeyValue } from 'y-utility/y-keyvalue'
+import { WebsocketProvider } from 'y-websocket'
 import { createYjsProvider } from '../../lib/yjs/provider'
 
 export type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'error'
 
 /**
  * Return type for useYjsStore hook.
- * Includes doc and yArr refs for UndoManager integration.
+ * Includes doc, yArr, and provider refs for UndoManager and Awareness integration.
  */
 export interface YjsStoreResult {
   store: TLStoreWithStatus
   status: ConnectionStatus
   doc: Y.Doc | null
   yArr: Y.Array<{ key: string; val: TLRecord }> | null
+  provider: WebsocketProvider | null
 }
 
 /**
@@ -42,13 +44,15 @@ export function useYjsStore(boardId: string, token: string, assetStore?: TLAsset
   }))
   const [status, setStatus] = useState<ConnectionStatus>('connecting')
 
-  // Refs for UndoManager access - these are exposed for per-user undo/redo
+  // Refs for UndoManager and Awareness access
   const docRef = useRef<Y.Doc | null>(null)
   const yArrRef = useRef<Y.Array<{ key: string; val: TLRecord }> | null>(null)
+  const providerRef = useRef<WebsocketProvider | null>(null)
 
   useEffect(() => {
     const { doc, provider } = createYjsProvider(boardId, token)
     docRef.current = doc
+    providerRef.current = provider
 
     // Get clientId for transaction origins (enables per-user undo)
     const clientId = doc.clientID
@@ -192,6 +196,7 @@ export function useYjsStore(boardId: string, token: string, assetStore?: TLAsset
       doc.destroy()
       docRef.current = null
       yArrRef.current = null
+      providerRef.current = null
     }
   }, [boardId, token, store])
 
@@ -200,5 +205,6 @@ export function useYjsStore(boardId: string, token: string, assetStore?: TLAsset
     status,
     doc: docRef.current,
     yArr: yArrRef.current,
+    provider: providerRef.current,
   }
 }
