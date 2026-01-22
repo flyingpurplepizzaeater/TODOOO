@@ -11,26 +11,26 @@
 ## Current Position
 
 **Phase:** 6 - File Handling (IN PROGRESS)
-**Plan:** 2 of 4 complete
+**Plan:** 3 of 4 complete
 **Status:** In Progress
-**Last activity:** 2026-01-22 - Completed 06-02 Image Upload UI
+**Last activity:** 2026-01-22 - Completed 06-03 Export PNG/PDF
 
 ```
-[#####.....] Plan 2/4 in Phase 6
+[########..] Plan 3/4 in Phase 6
 [============================================================>.] Phase 6 of 8
 ```
 
 **Phase 6 progress:**
 - 06-01: Asset Store Foundation - COMPLETE (presigned URL endpoint, TLAssetStore)
 - 06-02: Image Upload UI - COMPLETE (toolbar button, drag-drop, paste all working)
-- 06-03: Export PNG/PDF - PENDING
+- 06-03: Export PNG/PDF - COMPLETE (PNG/PDF export with full options)
 - 06-04: Manual Verification - PENDING
 
 **Requirements in progress:**
 - FILE-01: User can upload images via button/paste/drag-drop - COMPLETE (toolbar button + tldraw native handling)
 - FILE-02: Images persist and sync across collaborators - COMPLETE (asset store + presigned URLs)
-- FILE-03: User can export canvas as PNG - PENDING
-- FILE-04: User can export canvas as PDF - PENDING
+- FILE-03: User can export canvas as PNG - COMPLETE (viewport/full, background, scale 0.5x-4x)
+- FILE-04: User can export canvas as PDF - COMPLETE (single/multi-page, portrait/landscape, A4/Letter/A3/Tabloid/Legal)
 
 **Deferred verification:**
 - Manual testing deferred per user request (Phases 3, 4, and 5 need visual verification)
@@ -40,9 +40,9 @@
 | Metric | Value |
 |--------|-------|
 | Phases completed | 5/8 |
-| Requirements done | 21/27 |
-| Current phase progress | 50% |
-| Plans completed this phase | 2/4 |
+| Requirements done | 23/27 |
+| Current phase progress | 75% |
+| Plans completed this phase | 3/4 |
 
 ## Accumulated Context
 
@@ -105,6 +105,11 @@
 | 1-hour presigned URL expiry | Balances usability with security for uploads | 2026-01-22 |
 | CASCADE_OFFSET 40px for batch uploads | Stacked cards effect when uploading multiple images | 2026-01-22 |
 | Toolbar-only upload code | tldraw handles drag-drop/paste natively with TLAssetStore | 2026-01-22 |
+| jspdf for PDF generation | 15M+ weekly downloads, mature, well-documented | 2026-01-22 |
+| Scale 2 for PDF image quality | Higher resolution for print-quality PDFs | 2026-01-22 |
+| 20pt PDF page margins | Clean presentation with breathing room | 2026-01-22 |
+| Viewport as default export scope | Most common use case is export what you see | 2026-01-22 |
+| Landscape as default PDF orientation | Better fit for typical whiteboard content | 2026-01-22 |
 
 ### Research Flags
 
@@ -136,30 +141,31 @@ None currently.
 
 ## Session Continuity
 
-**Last session:** 2026-01-22 - Completed Plan 06-02 (Image Upload UI)
-**Next action:** Execute Plan 06-03 (Export PNG/PDF)
+**Last session:** 2026-01-22 - Completed Plan 06-03 (Export PNG/PDF)
+**Next action:** Execute Plan 06-04 (Manual Verification)
 
 **Context for next session:**
 - Phases 1-5 complete (Real-Time, Canvas, Drawing, Notes, TODO)
-- Phase 6 Plans 1-2 complete - Image upload fully functional
-- Image upload infrastructure:
+- Phase 6 Plans 1-3 complete - File handling features all implemented
+- File handling infrastructure:
   - fileHandling/useAssetStore.ts: TLAssetStore for MinIO uploads
   - fileHandling/useImageUpload.ts: handleFileUpload() for toolbar button
-  - CustomToolbar.tsx: Image button between TODO and Frames
-- All three upload methods working:
-  - Toolbar button: Opens file picker, supports batch with cascade offset
-  - Drag-drop: Handled natively by tldraw + TLAssetStore
-  - Paste: Handled natively by tldraw + TLAssetStore
+  - fileHandling/useExport.ts: exportToPng and exportToPdf functions
+  - fileHandling/ExportDialog.tsx: Modal for export options
+  - CustomToolbar.tsx: Image button + Export button
+- Export features implemented:
+  - PNG: viewport/full scope, background toggle, scale 0.5x/1x/2x/4x
+  - PDF: single/multi-page, portrait/landscape, A4/Letter/A3/Tabloid/Legal
+  - Dialog with format tabs and loading state
 - Key patterns established:
-  - Hidden file input with document.body.appendChild for file picker
-  - editor.putExternalContent() for tldraw image handling
-  - CASCADE_OFFSET = 40px for batch upload stacking
+  - tldraw toImage() for canvas export with bounds selection
+  - jspdf for PDF generation with multi-page tiling
+  - Blob download helper with URL.createObjectURL
 - Phase 6 remaining work:
-  - 06-03: Export functionality (PNG, PDF)
   - 06-04: Manual verification
 - Manual testing deferred: Phases 3, 4, 5, and 6 need visual verification
 
 ---
 
 *State initialized: 2026-01-19*
-*Last updated: 2026-01-22 after Plan 06-02 completion*
+*Last updated: 2026-01-22 after Plan 06-03 completion*
