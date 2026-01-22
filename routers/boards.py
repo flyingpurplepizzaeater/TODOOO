@@ -1,7 +1,7 @@
 """
 Board management endpoints.
 
-Provides CRUD operations for boards and permission sharing.
+Provides CRUD operations for boards, permission sharing, and file uploads.
 """
 import uuid
 from fastapi import APIRouter, Depends, HTTPException, status, Request
@@ -14,8 +14,34 @@ from models import User, Board, BoardPermission, PermissionLevel, AuditLog
 from schemas import (
     BoardCreate, BoardResponse,
     BoardPermissionCreate, BoardPermissionResponse,
-    ShareLinkResponse
+    ShareLinkResponse,
+    UploadUrlRequest, UploadUrlResponse
 )
+import config
+
+# Lazy import boto3 to avoid startup failure if not installed
+# boto3 is only required for file upload functionality
+_s3_client = None
+
+
+def get_s3_client():
+    """Get or create S3 client for MinIO presigned URL generation."""
+    global _s3_client
+    if _s3_client is None:
+        try:
+            from boto3 import client as boto3_client
+            _s3_client = boto3_client(
+                's3',
+                endpoint_url=config.MINIO_URL,
+                aws_access_key_id=config.MINIO_ACCESS_KEY,
+                aws_secret_access_key=config.MINIO_SECRET_KEY
+            )
+        except ImportError:
+            raise HTTPException(
+                status_code=503,
+                detail="File upload service unavailable (boto3 not installed)"
+            )
+    return _s3_client
 
 router = APIRouter(prefix="/boards", tags=["boards"])
 
@@ -360,3 +386,69 @@ async def list_permissions(
         select(BoardPermission).where(BoardPermission.board_id == board_id)
     )
     return result.scalars().all()
+
+
+@router.post("/{board_id}/upload-url", response_model=UploadUrlResponse)
+async def get_upload_url(
+    board_id: str,
+    request: UploadUrlRequest,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Generate a presigned URL for uploading a file to MinIO.
+
+    Requires edit access to the board (owner OR user with edit permission).
+    Returns:
+    - uploadUrl: Presigned PUT URL for direct upload to MinIO (expires in 1 hour)
+    - assetUrl: Public URL to access the file after upload
+    """
+    # Verify board exists
+    result = await db.execute(select(Board).where(Board.id == board_id))
+    board = result.scalar_one_or_none()
+
+    if not board:
+        raise HTTPException(status_code=404, detail="Board not found")
+
+    # Check access: user must be owner OR have edit permission
+    has_access = False
+    if board.owner_id == user.id:
+        has_access = True
+    else:
+        # Check for edit permission
+        result = await db.execute(
+            select(BoardPermission).where(
+                BoardPermission.board_id == board_id,
+                BoardPermission.user_id == user.id,
+                BoardPermission.level == PermissionLevel.edit
+            )
+        )
+        if result.scalar_one_or_none():
+            has_access = True
+
+    if not has_access:
+        raise HTTPException(
+            status_code=403,
+            detail="Edit access required to upload files"
+        )
+
+    # Generate unique key: boards/{board_id}/{uuid}/{filename}
+    file_uuid = str(uuid.uuid4())
+    key = f"boards/{board_id}/{file_uuid}/{request.filename}"
+
+    # Get presigned URL from S3/MinIO
+    s3 = get_s3_client()
+    upload_url = s3.generate_presigned_url(
+        'put_object',
+        Params={
+            'Bucket': config.MINIO_BUCKET,
+            'Key': key,
+            'ContentType': request.contentType
+        },
+        ExpiresIn=3600  # 1 hour
+    )
+
+    # Construct public asset URL
+    asset_url = f"{config.MINIO_PUBLIC_URL}/{config.MINIO_BUCKET}/{key}"
+
+    return UploadUrlResponse(uploadUrl=upload_url, assetUrl=asset_url)

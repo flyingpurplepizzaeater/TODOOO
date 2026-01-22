@@ -25,3 +25,11 @@ if not SECRET_KEY:
 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_HOURS = int(os.getenv("ACCESS_TOKEN_EXPIRE_HOURS", "24"))
+
+# MinIO Object Storage Configuration
+# Used for canvas asset uploads (images, files)
+MINIO_URL = os.getenv("MINIO_URL", "http://localhost:9000")
+MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "minioadmin")
+MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY", "minioadmin")
+MINIO_PUBLIC_URL = os.getenv("MINIO_PUBLIC_URL", "http://localhost:9000")
+MINIO_BUCKET = os.getenv("MINIO_BUCKET", "canvas-assets")

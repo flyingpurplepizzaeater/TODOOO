@@ -161,3 +161,16 @@ class ShareLinkResponse(BaseModel):
     url: str
     permission_level: str
     is_public: bool
+
+
+# File Upload
+class UploadUrlRequest(BaseModel):
+    """Request for presigned upload URL."""
+    filename: str
+    contentType: str
+
+
+class UploadUrlResponse(BaseModel):
+    """Response with presigned upload URL and final asset URL."""
+    uploadUrl: str
+    assetUrl: str
