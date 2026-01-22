@@ -8,6 +8,7 @@ import {
   getViewportCenter,
 } from './framePresets'
 import { handleFileUpload } from './fileHandling/useImageUpload'
+import { ExportDialog } from './fileHandling/ExportDialog'
 
 /**
  * Custom toolbar positioned at bottom-center with auto-hide functionality.
@@ -27,6 +28,7 @@ export function CustomToolbar() {
   const [visible, setVisible] = useState(true)
   const [pinned, setPinned] = useState(false)
   const [showFrameMenu, setShowFrameMenu] = useState(false)
+  const [showExportDialog, setShowExportDialog] = useState(false)
   const frameMenuRef = useRef<HTMLDivElement>(null)
 
   // Track pointer state and current tool to determine auto-hide
@@ -297,6 +299,32 @@ export function CustomToolbar() {
         )}
       </div>
 
+      {/* Export button */}
+      <button
+        onClick={() => setShowExportDialog(true)}
+        title="Export Board"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: 32,
+          paddingLeft: 10,
+          paddingRight: 10,
+          border: 'none',
+          borderRadius: 6,
+          background: 'rgba(255, 255, 255, 0.9)',
+          color: '#444',
+          cursor: 'pointer',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          fontSize: 12,
+          fontWeight: 500,
+          fontFamily: 'system-ui, sans-serif',
+          transition: 'background 0.2s, color 0.2s',
+        }}
+      >
+        Export
+      </button>
+
       {/* Pin toggle button */}
       <button
         onClick={handlePinToggle}
@@ -345,6 +373,11 @@ export function CustomToolbar() {
           )}
         </svg>
       </button>
+
+      {/* Export dialog */}
+      {showExportDialog && (
+        <ExportDialog editor={editor} onClose={() => setShowExportDialog(false)} />
+      )}
     </div>
   )
 }
