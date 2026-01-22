@@ -40,13 +40,18 @@ export interface UpdateTodoRequest {
  * Error thrown when API request fails.
  */
 export class TodoApiError extends Error {
+  status: number
+  details?: unknown
+
   constructor(
     message: string,
-    public status: number,
-    public details?: unknown
+    status: number,
+    details?: unknown
   ) {
     super(message)
     this.name = 'TodoApiError'
+    this.status = status
+    this.details = details
   }
 }
 

@@ -1,4 +1,4 @@
-import { T, TLBaseShape } from 'tldraw'
+import { T, type TLBaseShape } from 'tldraw'
 
 /**
  * TodoShape type definition for tldraw custom shape.

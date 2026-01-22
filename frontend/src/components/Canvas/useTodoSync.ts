@@ -1,11 +1,10 @@
 import { useEffect, useRef, useCallback } from 'react'
-import { Editor, TLShapeId } from 'tldraw'
-import { TodoShape } from './shapes/todo/types'
+import { Editor, type TLShapeId } from 'tldraw'
+import type { TodoShape } from './shapes/todo/types'
 import {
   createTodo,
   updateTodo,
   deleteTodo,
-  BackendTodoItem,
 } from '../../services/todoApi'
 
 /**
@@ -28,13 +27,13 @@ export interface TodoWebSocketEvent {
  * Debounce helper for update calls.
  * Groups rapid changes to prevent excessive API calls.
  */
-function debounce<T extends (...args: unknown[]) => void>(
-  fn: T,
+function debounce<TArgs extends unknown[]>(
+  fn: (...args: TArgs) => void,
   delay: number
-): { (...args: Parameters<T>): void; cancel: () => void } {
+): { (...args: TArgs): void; cancel: () => void } {
   let timeoutId: ReturnType<typeof setTimeout> | null = null
 
-  const debounced = (...args: Parameters<T>) => {
+  const debounced = (...args: TArgs) => {
     if (timeoutId) {
       clearTimeout(timeoutId)
     }

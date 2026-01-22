@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { Tldraw, Editor, type TLComponents } from 'tldraw'
+import * as Y from 'yjs'
 import 'tldraw/tldraw.css'
 import { useYjsStore, type ConnectionStatus } from './useYjsStore'
 import { useUndoManager } from './useUndoManager'
@@ -141,7 +142,7 @@ export function Canvas({ boardId, token, defaultListId }: CanvasProps) {
   )
 
   const { store, status, doc, yArr, provider } = useYjsStore(boardId, token, assetStore)
-  const { canUndo, canRedo, undo, redo } = useUndoManager(doc, yArr)
+  const { canUndo, canRedo, undo, redo } = useUndoManager(doc, yArr as Y.Array<unknown> | null)
   const editorRef = useRef<Editor | null>(null)
   // Editor state for sync hook (set on mount)
   const [editor, setEditor] = useState<Editor | null>(null)

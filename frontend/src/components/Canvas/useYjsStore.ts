@@ -77,18 +77,19 @@ export function useYjsStore(boardId: string, token: string, assetStore?: TLAsset
      * 4. Compare current store with Yjs state
      * 5. Add/update/remove records as needed
      */
-    const handleYjsChange = (_events: Y.YEvent<unknown>[], transaction: Y.Transaction) => {
+    const handleYjsChange = (_events?: Y.YEvent<Y.AbstractType<unknown>>[], transaction?: Y.Transaction) => {
       // Skip if this is our own transaction (we already applied it locally)
-      if (transaction.origin === clientId) return
+      if (transaction && transaction.origin === clientId) return
       if (isApplyingRemote) return
 
       isApplyingRemote = true
       try {
         store.mergeRemoteChanges(() => {
           // Collect all records from Yjs
+          // YKeyValue stores entries in its internal map property
           const remoteRecords: TLRecord[] = []
-          yStore.forEach((value) => {
-            if (value) remoteRecords.push(value)
+          yStore.map.forEach((entry) => {
+            if (entry.val) remoteRecords.push(entry.val)
           })
 
           // Get current store records for comparison
@@ -201,7 +202,7 @@ export function useYjsStore(boardId: string, token: string, assetStore?: TLAsset
   }, [boardId, token, store])
 
   return {
-    store: store as TLStoreWithStatus,
+    store: store as unknown as TLStoreWithStatus,
     status,
     doc: docRef.current,
     yArr: yArrRef.current,

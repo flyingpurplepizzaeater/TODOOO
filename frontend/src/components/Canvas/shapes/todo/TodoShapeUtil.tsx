@@ -1,7 +1,7 @@
 import {
   BaseBoxShapeUtil,
   HTMLContainer,
-  TLResizeInfo,
+  type TLResizeInfo,
   resizeBox,
 } from 'tldraw'
 import { isPast, isToday } from 'date-fns'
