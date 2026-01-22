@@ -22,3 +22,6 @@ export { useAwareness } from './useAwareness'
 export type { UseAwarenessOptions, UseAwarenessResult } from './useAwareness'
 export { useIdleDetection } from './useIdleDetection'
 export { useFollowMode } from './useFollowMode'
+
+// Components
+export { DotCursor } from './DotCursor'
