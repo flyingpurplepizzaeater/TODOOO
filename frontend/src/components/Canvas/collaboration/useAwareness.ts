@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { Editor, InstancePresenceRecordType, type TLInstancePresence } from 'tldraw'
+import { Editor, InstancePresenceRecordType, type TLInstancePresence, type TLShapeId } from 'tldraw'
 import { WebsocketProvider } from 'y-websocket'
 import type { AwarenessState } from './types'
 import { colorFromUserId } from './collaboratorColors'
@@ -350,6 +350,9 @@ function syncPresenceToTldraw(
             },
             // CRITICAL: Without lastActivityTimestamp, tldraw hides cursors
             lastActivityTimestamp: state.lastActivity,
+            // Include selected shapes for CollaboratorShapeIndicator rendering
+            // Cast to TLShapeId[] since awareness state stores them as strings
+            selectedShapeIds: state.selection as TLShapeId[],
             chatMessage: '',
           })
         )
