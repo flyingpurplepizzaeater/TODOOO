@@ -10,20 +10,20 @@
 
 ## Current Position
 
-**Phase:** 7 - Collaboration Polish (IN PROGRESS)
-**Plan:** 2 of 3 complete
-**Status:** In Progress
-**Last activity:** 2026-01-22 - Completed 07-02 Cursor Rendering
+**Phase:** 7 - Collaboration Polish (COMPLETE)
+**Plan:** 3 of 3 complete
+**Status:** Phase Complete
+**Last activity:** 2026-01-22 - Completed 07-03 Presence Panel
 
 ```
-[######....] Plan 2/3 in Phase 7
-[=========================================================================.] Phase 7 of 8
+[##########] Plan 3/3 in Phase 7
+[==================================================================================] Phase 7 of 8
 ```
 
 **Phase 7 progress:**
 - 07-01: Awareness Foundation - COMPLETE (useAwareness hook, color palette, TLInstancePresence sync)
 - 07-02: Cursor Rendering - COMPLETE (DotCursor, CollaboratorIndicator, TLComponents config)
-- 07-03: Presence Panel - PENDING
+- 07-03: Presence Panel - COMPLETE (PresenceSidebar, useFollowMode, useIdleDetection)
 
 **Phase 6 (COMPLETE):**
 - 06-01: Asset Store Foundation - COMPLETE
@@ -37,10 +37,10 @@
 
 | Metric | Value |
 |--------|-------|
-| Phases completed | 6/8 |
-| Requirements done | 23/27 |
-| Current phase progress | 67% |
-| Plans completed this phase | 2/3 |
+| Phases completed | 7/8 |
+| Requirements done | 24/27 |
+| Current phase progress | 100% |
+| Plans completed this phase | 3/3 |
 
 ## Accumulated Context
 
@@ -116,6 +116,10 @@
 | Username label on hover only | Keeps canvas clean, reveals on hover per CONTEXT.md | 2026-01-22 |
 | TLComponents override for cursor | CollaboratorCursor -> DotCursor for custom dot shape | 2026-01-22 |
 | selectedShapeIds in presence | Enables tldraw CollaboratorShapeIndicator rendering | 2026-01-22 |
+| useRef for wasMobile tracking | Avoids unused state variable TypeScript error in resize handler | 2026-01-22 |
+| editor.getInstanceState().followingUserId | tldraw doesn't expose getIsFollowingUser method | 2026-01-22 |
+| 30s cursor fade, 2min idle threshold | Per CONTEXT.md inactivity indicators | 2026-01-22 |
+| 768px mobile breakpoint | Standard responsive sidebar collapse threshold | 2026-01-22 |
 
 ### Research Flags
 
@@ -148,30 +152,35 @@ None currently.
 
 ## Session Continuity
 
-**Last session:** 2026-01-22 - Completed 07-02 Cursor Rendering
-**Next action:** Continue Phase 7 with 07-03 Presence Panel
+**Last session:** 2026-01-22 - Completed 07-03 Presence Panel
+**Next action:** Begin Phase 8 Mobile App
 
 **Context for next session:**
-- Phases 1-6 complete, Phase 7 Plans 1-2 complete
-- 07-02 Cursor Rendering complete:
-  - DotCursor component: 18px dot with zoom compensation
-  - CollaboratorIndicator: Selection outlines with username labels
-  - TLComponents configuration: CollaboratorCursor + CollaboratorShapeIndicator
-  - selectedShapeIds synced in TLInstancePresence
-- Frontend collaboration structure:
-  - collaboration/DotCursor.tsx: Custom dot cursor component
-  - collaboration/CollaboratorIndicator.tsx: Selection indicator with label
-  - collaboration/useAwareness.ts: Now includes selectedShapeIds sync
-  - collaboration/index.ts: Updated exports
-  - Canvas.tsx: canvasComponents with collaboration overrides
+- Phases 1-7 complete
+- 07-03 Presence Panel complete:
+  - useIdleDetection hook: 30s cursor fade, 2min idle status
+  - useFollowMode hook: tldraw follow API wrapper with state tracking
+  - CollaboratorItem component: Avatar with colored border
+  - PresenceSidebar component: Online count, collaborator list
+  - Canvas integration: Follow/stop-follow, viewport border indicator
+- Frontend collaboration complete:
+  - collaboration/useIdleDetection.ts: Inactivity tracking
+  - collaboration/useFollowMode.ts: Viewport following
+  - collaboration/CollaboratorItem.tsx: User row component
+  - collaboration/PresenceSidebar.tsx: Sidebar with toggle
+  - collaboration/DotCursor.tsx: Custom cursor
+  - collaboration/CollaboratorIndicator.tsx: Selection indicator
+  - collaboration/useAwareness.ts: Core awareness hook
+  - Canvas.tsx: Full collaboration integration
 - Key patterns established:
-  - TLComponents override for cursor/indicator customization
-  - Zoom-compensated sizing: size / zoom for consistent screen appearance
-  - Username label on hover via useState
-- Manual testing deferred: Phases 3, 4, 5, 6, and 7 need visual verification
-- Next: 07-03 Presence Panel integration testing
+  - Follow mode via startFollowingUser/stopFollowingUser
+  - Colored viewport border for active following
+  - Responsive sidebar: collapsed mobile, open desktop
+  - Idle detection with timer-based callbacks
+- Manual testing deferred: Phases 3-7 need visual verification
+- Next: Phase 8 Mobile App with Capacitor
 
 ---
 
 *State initialized: 2026-01-19*
-*Last updated: 2026-01-22 after 07-02 completion*
+*Last updated: 2026-01-22 after 07-03 completion*
