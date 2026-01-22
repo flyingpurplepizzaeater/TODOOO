@@ -4,6 +4,7 @@ import 'tldraw/tldraw.css'
 import { useYjsStore, type ConnectionStatus } from './useYjsStore'
 import { useUndoManager } from './useUndoManager'
 import { useTodoSync } from './useTodoSync'
+import { useAwareness } from './collaboration'
 import { cameraOptions, handleWheel } from './cameraOptions'
 import { createUiOverrides } from './uiOverrides'
 import { toolbarComponents } from './CustomToolbar'
@@ -123,14 +124,27 @@ export function Canvas({ boardId, token, defaultListId }: CanvasProps) {
     [boardId, token]
   )
 
-  const { store, status, doc, yArr } = useYjsStore(boardId, token, assetStore)
+  const { store, status, doc, yArr, provider } = useYjsStore(boardId, token, assetStore)
   const { canUndo, canRedo, undo, redo } = useUndoManager(doc, yArr)
   const editorRef = useRef<Editor | null>(null)
   // Editor state for sync hook (set on mount)
   const [editor, setEditor] = useState<Editor | null>(null)
 
+  // Mock user info - TODO: Replace with actual user from auth context
+  const currentUser = useMemo(() => ({
+    id: 'user-' + Math.random().toString(36).slice(2, 9),
+    name: 'Anonymous User'
+  }), [])
+
   // Enable TODO sync to backend when editor is ready and listId is provided
   useTodoSync(editor, token, defaultListId ?? null)
+
+  // Enable awareness/cursor sync when editor and provider are ready
+  const { clearCursor } = useAwareness(
+    editor && provider
+      ? { provider, editor, user: currentUser }
+      : null
+  )
 
   // Create UI overrides with per-user undo/redo
   const overrides = useMemo(
@@ -172,10 +186,16 @@ export function Canvas({ boardId, token, defaultListId }: CanvasProps) {
     }
   }, [])
 
+  // Handle canvas mouse leave - clear cursor from awareness
+  const handleMouseLeave = useCallback(() => {
+    clearCursor()
+  }, [clearCursor])
+
   return (
     <div
       style={{ position: 'fixed', inset: 0 }}
       onWheel={onWheel}
+      onMouseLeave={handleMouseLeave}
     >
       <ConnectionIndicator status={status} />
       <UndoRedoIndicator canUndo={canUndo} canRedo={canRedo} />

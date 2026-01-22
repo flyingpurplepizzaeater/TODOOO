@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { Editor, InstancePresenceRecordType, TLInstancePresence } from 'tldraw'
+import { Editor, InstancePresenceRecordType, type TLInstancePresence } from 'tldraw'
 import { WebsocketProvider } from 'y-websocket'
 import type { AwarenessState } from './types'
 import { colorFromUserId } from './collaboratorColors'
@@ -19,12 +19,20 @@ export interface UseAwarenessOptions {
 export interface UseAwarenessResult {
   /** Map of remote user states (clientId -> AwarenessState) */
   others: Map<number, AwarenessState>
-  /** This client's awareness ID */
+  /** This client's awareness ID (0 if not connected) */
   localClientId: number
   /** Manual cursor update function (usually not needed - hook tracks automatically) */
   updateCursor: (x: number, y: number) => void
   /** Clear cursor from awareness (call on canvas leave) */
   clearCursor: () => void
+}
+
+/** Empty result returned when options are null */
+const EMPTY_RESULT: UseAwarenessResult = {
+  others: new Map(),
+  localClientId: 0,
+  updateCursor: () => {},
+  clearCursor: () => {},
 }
 
 /**
@@ -43,21 +51,30 @@ const CURSOR_UPDATE_INTERVAL = 50
  * 4. Tracks local cursor position with throttling
  * 5. Cleans up on unmount (prevents ghost cursors)
  *
- * @param options - Provider, editor, and user info
+ * If options is null, returns empty result (no-op). This allows calling
+ * the hook unconditionally even when editor/provider aren't ready.
+ *
+ * @param options - Provider, editor, and user info (or null)
  * @returns Object with remote users, cursor control functions
  */
-export function useAwareness({
-  provider,
-  editor,
-  user,
-}: UseAwarenessOptions): UseAwarenessResult {
+export function useAwareness(
+  options: UseAwarenessOptions | null
+): UseAwarenessResult {
   const [others, setOthers] = useState<Map<number, AwarenessState>>(new Map())
   const localClientIdRef = useRef<number>(0)
   const throttleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const lastCursorUpdateRef = useRef<number>(0)
 
+  // Extract options (null-safe)
+  const provider = options?.provider ?? null
+  const editor = options?.editor ?? null
+  const user = options?.user ?? null
+
   // Initialize awareness and set up subscriptions
   useEffect(() => {
+    // Skip if not ready
+    if (!provider || !editor || !user) return
+
     const awareness = provider.awareness
     const localClientId = awareness.clientID
     localClientIdRef.current = localClientId
@@ -116,10 +133,13 @@ export function useAwareness({
         clearTimeout(throttleTimeoutRef.current)
       }
     }
-  }, [provider, editor, user.id, user.name])
+  }, [provider, editor, user?.id, user?.name])
 
   // Track pointer moves on the editor
   useEffect(() => {
+    // Skip if not ready
+    if (!provider || !editor) return
+
     const awareness = provider.awareness
 
     /**
@@ -190,6 +210,9 @@ export function useAwareness({
 
   // Track selection changes
   useEffect(() => {
+    // Skip if not ready
+    if (!provider || !editor) return
+
     const awareness = provider.awareness
 
     const handleSelectionChange = () => {
@@ -223,6 +246,8 @@ export function useAwareness({
    */
   const updateCursor = useCallback(
     (x: number, y: number) => {
+      if (!provider) return
+
       const awareness = provider.awareness
       const currentState = awareness.getLocalState() as AwarenessState | null
 
@@ -248,6 +273,8 @@ export function useAwareness({
    * Call this when the mouse leaves the canvas.
    */
   const clearCursor = useCallback(() => {
+    if (!provider) return
+
     const awareness = provider.awareness
     const currentState = awareness.getLocalState() as AwarenessState | null
 
@@ -258,6 +285,11 @@ export function useAwareness({
       })
     }
   }, [provider])
+
+  // Return empty result if not ready
+  if (!options) {
+    return EMPTY_RESULT
+  }
 
   return {
     others,
