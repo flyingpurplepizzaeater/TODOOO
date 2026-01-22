@@ -193,6 +193,13 @@ Plans:
 3. User sees a presence list showing all currently connected collaborators
 4. Collaborators joining/leaving updates presence indicator within 2 seconds
 
+**Plans:** 3 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — Awareness hook and cursor sync (Yjs Awareness, TLInstancePresence, color palette)
+- [ ] 07-02-PLAN.md — Dot cursor and selection indicators (DotCursor component, TLComponents config)
+- [ ] 07-03-PLAN.md — Presence sidebar (collaborator list, idle detection, follow mode)
+
 ---
 
 ## Phase 8: Mobile Platform
@@ -227,7 +234,7 @@ Plans:
 | 4 | Notes & Text | TEXT-01, TEXT-02, TEXT-03 | Complete |
 | 5 | TODO Integration | TODO-01, TODO-02, TODO-03, TODO-04 | Complete |
 | 6 | File Handling | FILE-01, FILE-02, FILE-03 | Complete |
-| 7 | Collaboration Polish | SYNC-01, SYNC-02 | Not Started |
+| 7 | Collaboration Polish | SYNC-01, SYNC-02 | Planning Complete |
 | 8 | Mobile Platform | PLAT-02, PLAT-03, PLAT-04 | Not Started |
 
 **Coverage:** 27/27 requirements mapped
@@ -255,4 +262,4 @@ Phase 8: Mobile Platform (depends on 2-6 stable)
 ---
 
 *Roadmap created: 2026-01-19*
-*Last updated: 2026-01-22 after Phase 6 execution*
+*Last updated: 2026-01-22 after Phase 7 planning*
