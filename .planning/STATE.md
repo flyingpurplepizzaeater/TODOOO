@@ -10,28 +10,28 @@
 
 ## Current Position
 
-**Phase:** 6 - File Handling (COMPLETE)
-**Plan:** 3 of 3 complete
-**Status:** Phase Complete
-**Last activity:** 2026-01-22 - Completed Phase 6 execution
+**Phase:** 7 - Collaboration Polish (IN PROGRESS)
+**Plan:** 1 of 3 complete
+**Status:** In Progress
+**Last activity:** 2026-01-22 - Completed 07-01 Awareness Foundation
 
 ```
-[##########] Plan 3/3 in Phase 6
-[======================================================================>.] Phase 6 of 8
+[###.......] Plan 1/3 in Phase 7
+[=========================================================================.] Phase 7 of 8
 ```
 
-**Phase 6 progress:**
-- 06-01: Asset Store Foundation - COMPLETE (presigned URL endpoint, TLAssetStore)
-- 06-02: Image Upload UI - COMPLETE (toolbar button, drag-drop, paste all working)
-- 06-03: Export PNG/PDF - COMPLETE (PNG/PDF export with full options)
+**Phase 7 progress:**
+- 07-01: Awareness Foundation - COMPLETE (useAwareness hook, color palette, TLInstancePresence sync)
+- 07-02: Cursor Rendering - PENDING
+- 07-03: Presence Panel - PENDING
 
-**Requirements completed this phase:**
-- FILE-01: User can upload/paste images onto canvas - COMPLETE
-- FILE-02: User can export board as PNG image - COMPLETE
-- FILE-03: User can export board as PDF document - COMPLETE
+**Phase 6 (COMPLETE):**
+- 06-01: Asset Store Foundation - COMPLETE
+- 06-02: Image Upload UI - COMPLETE
+- 06-03: Export PNG/PDF - COMPLETE
 
 **Deferred verification:**
-- Manual testing deferred per user request (Phases 3, 4, 5, and 6 need visual verification)
+- Manual testing deferred per user request (Phases 3, 4, 5, 6, and 7 need visual verification)
 
 ## Performance Metrics
 
@@ -39,8 +39,8 @@
 |--------|-------|
 | Phases completed | 6/8 |
 | Requirements done | 22/27 |
-| Current phase progress | 100% |
-| Plans completed this phase | 3/3 |
+| Current phase progress | 33% |
+| Plans completed this phase | 1/3 |
 
 ## Accumulated Context
 
@@ -108,6 +108,10 @@
 | 20pt PDF page margins | Clean presentation with breathing room | 2026-01-22 |
 | Viewport as default export scope | Most common use case is export what you see | 2026-01-22 |
 | Landscape as default PDF orientation | Better fit for typical whiteboard content | 2026-01-22 |
+| Null-safe options pattern for useAwareness | Hook accepts null and returns empty result, allowing unconditional calls | 2026-01-22 |
+| requestAnimationFrame for pointer tracking | More reliable than store listeners for continuous cursor updates | 2026-01-22 |
+| 12-color palette with djb2 hash | Deterministic color from userId ensures consistency across clients | 2026-01-22 |
+| 50ms throttle for cursor updates | Balances smoothness (20 fps) with network efficiency | 2026-01-22 |
 
 ### Research Flags
 
@@ -119,6 +123,7 @@
 | 4 | tldraw note/text shapes | Complete - built-in shapes with customization |
 | 5 | tldraw custom shapes & bidirectional sync | Complete - BaseBoxShapeUtil, store.listen, mergeRemoteChanges patterns |
 | 6 | tldraw image upload & TLAssetStore | Complete - presigned URLs, createAssetStore pattern |
+| 7 | Yjs Awareness + tldraw presence | Complete - useAwareness hook, TLInstancePresence sync |
 | 8 | iOS canvas memory limits | Pending |
 
 ### TODOs
@@ -139,37 +144,35 @@ None currently.
 
 ## Session Continuity
 
-**Last session:** 2026-01-22 - Completed Phase 6 (File Handling)
-**Next action:** Begin Phase 7 (Collaboration Polish)
+**Last session:** 2026-01-22 - Completed 07-01 Awareness Foundation
+**Next action:** Continue Phase 7 with 07-02 Cursor Rendering
 
 **Context for next session:**
-- Phases 1-6 complete (Real-Time, Canvas, Drawing, Notes, TODO, File Handling)
-- Phase 6 features complete:
-  - Image upload via toolbar button (handleFileUpload)
-  - Drag-drop and paste handled natively by tldraw + TLAssetStore
-  - PNG export with scope, background, scale options
-  - PDF export with single/multi-page, orientation, page size options
-  - Export dialog with format tabs and loading state
-- Frontend file handling structure:
-  - fileHandling/useAssetStore.ts: TLAssetStore for MinIO uploads
-  - fileHandling/useImageUpload.ts: handleFileUpload() for toolbar button
-  - fileHandling/useExport.ts: exportToPng and exportToPdf functions
-  - fileHandling/ExportDialog.tsx: Modal for export options
-  - CustomToolbar.tsx: Image button + Export button added
-- Backend file handling:
-  - routers/boards.py: POST /{board_id}/upload-url endpoint
-  - config.py: MinIO configuration
-  - schemas.py: UploadUrlRequest/UploadUrlResponse
+- Phases 1-6 complete, Phase 7 Plan 1 complete
+- 07-01 Awareness Foundation complete:
+  - useAwareness hook for cursor/presence sync
+  - 12-color COLLABORATOR_COLORS palette
+  - colorFromUserId() for deterministic color assignment
+  - AwarenessState type definition
+  - TLInstancePresence sync via mergeRemoteChanges
+  - Provider exposed from useYjsStore
+  - Canvas integration with mouse leave handler
+- Frontend collaboration structure:
+  - collaboration/types.ts: AwarenessState interface
+  - collaboration/collaboratorColors.ts: Palette and color functions
+  - collaboration/useAwareness.ts: Main awareness hook
+  - collaboration/index.ts: Barrel export
+  - Canvas.tsx: useAwareness integration
+  - useYjsStore.ts: Provider ref exposed
 - Key patterns established:
-  - tldraw TLAssetStore for external asset storage
-  - Presigned URLs for secure MinIO uploads
-  - tldraw toImage() for canvas export with bounds selection
-  - jspdf for PDF generation with multi-page tiling
-  - Blob download helper with URL.createObjectURL
-- Manual testing deferred: Phases 3, 4, 5, and 6 need visual verification
-- Ready for Phase 7 (Collaboration Polish) - cursor presence and online indicators
+  - Null-safe hook pattern (null options = empty result)
+  - requestAnimationFrame for pointer tracking
+  - Awareness to TLInstancePresence conversion
+  - djb2 hash for deterministic user colors
+- Manual testing deferred: Phases 3, 4, 5, 6, and 7 need visual verification
+- Next: 07-02 custom dot cursor component
 
 ---
 
 *State initialized: 2026-01-19*
-*Last updated: 2026-01-22 after Phase 6 completion*
+*Last updated: 2026-01-22 after 07-01 completion*
