@@ -42,9 +42,9 @@
 
 ### File Handling
 
-- [ ] **FILE-01**: User can upload/paste images onto canvas
-- [ ] **FILE-02**: User can export board as PNG image
-- [ ] **FILE-03**: User can export board as PDF document
+- [x] **FILE-01**: User can upload/paste images onto canvas
+- [x] **FILE-02**: User can export board as PNG image
+- [x] **FILE-03**: User can export board as PDF document
 
 ### Platform
 
@@ -124,9 +124,9 @@ Explicitly excluded from this project:
 | TODO-02 | Phase 5 | Complete |
 | TODO-03 | Phase 5 | Complete |
 | TODO-04 | Phase 5 | Complete |
-| FILE-01 | Phase 6 | Pending |
-| FILE-02 | Phase 6 | Pending |
-| FILE-03 | Phase 6 | Pending |
+| FILE-01 | Phase 6 | Complete |
+| FILE-02 | Phase 6 | Complete |
+| FILE-03 | Phase 6 | Complete |
 | PLAT-01 | Phase 2 | Complete |
 | PLAT-02 | Phase 8 | Pending |
 | PLAT-03 | Phase 8 | Pending |
@@ -139,4 +139,4 @@ Explicitly excluded from this project:
 
 ---
 *Requirements defined: 2026-01-19*
-*Last updated: 2026-01-22 after Phase 5 completion*
+*Last updated: 2026-01-22 after Phase 6 completion*
