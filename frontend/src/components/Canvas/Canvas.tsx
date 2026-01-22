@@ -1,10 +1,10 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { Tldraw, Editor } from 'tldraw'
+import { Tldraw, Editor, type TLComponents } from 'tldraw'
 import 'tldraw/tldraw.css'
 import { useYjsStore, type ConnectionStatus } from './useYjsStore'
 import { useUndoManager } from './useUndoManager'
 import { useTodoSync } from './useTodoSync'
-import { useAwareness } from './collaboration'
+import { useAwareness, useFollowMode, PresenceSidebar, DotCursor, CollaboratorIndicator } from './collaboration'
 import { cameraOptions, handleWheel } from './cameraOptions'
 import { createUiOverrides } from './uiOverrides'
 import { toolbarComponents } from './CustomToolbar'
@@ -15,6 +15,22 @@ import { createAssetStore } from './fileHandling/useAssetStore'
 // Custom shape utils and tools - defined OUTSIDE component to prevent recreation
 const customShapeUtils = [TodoShapeUtil]
 const customTools = [TodoTool]
+
+/**
+ * Canvas TLComponents configuration.
+ *
+ * Merges toolbar components with collaboration components:
+ * - Toolbar: Custom toolbar from CustomToolbar.tsx
+ * - CollaboratorCursor: Custom dot cursor (per CONTEXT.md: dot/circle shape)
+ * - CollaboratorShapeIndicator: Custom selection indicators with username labels
+ */
+const canvasComponents: TLComponents = {
+  ...toolbarComponents,
+  // Custom dot cursor for collaborators (replaces default arrow pointer)
+  CollaboratorCursor: DotCursor,
+  // Custom selection indicator with username label
+  CollaboratorShapeIndicator: CollaboratorIndicator,
+}
 
 interface CanvasProps {
   boardId: string
@@ -140,11 +156,24 @@ export function Canvas({ boardId, token, defaultListId }: CanvasProps) {
   useTodoSync(editor, token, defaultListId ?? null)
 
   // Enable awareness/cursor sync when editor and provider are ready
-  const { clearCursor } = useAwareness(
+  const { others, clearCursor } = useAwareness(
     editor && provider
       ? { provider, editor, user: currentUser }
       : null
   )
+
+  // Enable follow mode for following other users' viewports
+  const followMode = useFollowMode(editor)
+
+  // Handle follow user action from presence sidebar
+  const handleFollowUser = useCallback((userId: string, userName: string, color: string) => {
+    if (!userId) {
+      // Empty userId means stop following
+      followMode.stopFollowing()
+    } else {
+      followMode.startFollowing(userId, userName, color)
+    }
+  }, [followMode])
 
   // Create UI overrides with per-user undo/redo
   const overrides = useMemo(
@@ -199,13 +228,19 @@ export function Canvas({ boardId, token, defaultListId }: CanvasProps) {
     >
       <ConnectionIndicator status={status} />
       <UndoRedoIndicator canUndo={canUndo} canRedo={canRedo} />
+      <PresenceSidebar
+        others={others}
+        onFollowUser={handleFollowUser}
+        followingUserId={followMode.followingUserId}
+        followingUserColor={followMode.followingUserColor}
+      />
       <Tldraw
         store={store}
         shapeUtils={customShapeUtils}
         tools={customTools}
         cameraOptions={cameraOptions}
         overrides={overrides}
-        components={toolbarComponents}
+        components={canvasComponents}
         onMount={handleMount}
         autoFocus
       />
