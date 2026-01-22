@@ -7,6 +7,7 @@ import {
   createCustomFrame,
   getViewportCenter,
 } from './framePresets'
+import { handleFileUpload } from './fileHandling/useImageUpload'
 
 /**
  * Custom toolbar positioned at bottom-center with auto-hide functionality.
@@ -138,6 +139,32 @@ export function CustomToolbar() {
         }}
       >
         TODO
+      </button>
+
+      {/* Image upload button */}
+      <button
+        onClick={() => handleFileUpload(editor)}
+        title="Upload Image"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: 32,
+          paddingLeft: 10,
+          paddingRight: 10,
+          border: 'none',
+          borderRadius: 6,
+          background: 'rgba(255, 255, 255, 0.9)',
+          color: '#444',
+          cursor: 'pointer',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          fontSize: 12,
+          fontWeight: 500,
+          fontFamily: 'system-ui, sans-serif',
+          transition: 'background 0.2s, color 0.2s',
+        }}
+      >
+        Image
       </button>
 
       {/* Frame preset dropdown */}
