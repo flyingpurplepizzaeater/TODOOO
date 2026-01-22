@@ -9,6 +9,7 @@ import { createUiOverrides } from './uiOverrides'
 import { toolbarComponents } from './CustomToolbar'
 import { restoreNoteColor, createNoteColorListener } from './noteColorPersistence'
 import { TodoShapeUtil, TodoTool } from './shapes/todo'
+import { createAssetStore } from './fileHandling/useAssetStore'
 
 // Custom shape utils and tools - defined OUTSIDE component to prevent recreation
 const customShapeUtils = [TodoShapeUtil]
@@ -114,7 +115,15 @@ function UndoRedoIndicator({ canUndo, canRedo }: { canUndo: boolean; canRedo: bo
  * mode, a "Made with tldraw" watermark appears.
  */
 export function Canvas({ boardId, token, defaultListId }: CanvasProps) {
-  const { store, status, doc, yArr } = useYjsStore(boardId, token)
+  // Create asset store for persistent image storage via MinIO
+  // Without this, images won't sync to collaborators or persist across reloads
+  // Must be created before useYjsStore since it's passed to store creation
+  const assetStore = useMemo(
+    () => createAssetStore(boardId, token),
+    [boardId, token]
+  )
+
+  const { store, status, doc, yArr } = useYjsStore(boardId, token, assetStore)
   const { canUndo, canRedo, undo, redo } = useUndoManager(doc, yArr)
   const editorRef = useRef<Editor | null>(null)
   // Editor state for sync hook (set on mount)

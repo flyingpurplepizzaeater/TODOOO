@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { createTLStore, defaultShapeUtils, type TLRecord, type TLStoreWithStatus } from 'tldraw'
+import { createTLStore, defaultShapeUtils, type TLRecord, type TLStoreWithStatus, type TLAssetStore } from 'tldraw'
 import * as Y from 'yjs'
 import { YKeyValue } from 'y-utility/y-keyvalue'
 import { createYjsProvider } from '../../lib/yjs/provider'
@@ -32,10 +32,14 @@ export interface YjsStoreResult {
  *
  * @param boardId - The board UUID to sync
  * @param token - JWT token for authentication
+ * @param assetStore - Optional TLAssetStore for persistent image storage
  * @returns Object with tldraw store, connection status, doc, and yArr for UndoManager
  */
-export function useYjsStore(boardId: string, token: string): YjsStoreResult {
-  const [store] = useState(() => createTLStore({ shapeUtils: defaultShapeUtils }))
+export function useYjsStore(boardId: string, token: string, assetStore?: TLAssetStore): YjsStoreResult {
+  const [store] = useState(() => createTLStore({
+    shapeUtils: defaultShapeUtils,
+    assets: assetStore,
+  }))
   const [status, setStatus] = useState<ConnectionStatus>('connecting')
 
   // Refs for UndoManager access - these are exposed for per-user undo/redo
