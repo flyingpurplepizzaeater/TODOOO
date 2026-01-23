@@ -10,37 +10,38 @@
 
 ## Current Position
 
-**Phase:** 7 - Collaboration Polish (COMPLETE)
-**Plan:** 3 of 3 complete
-**Status:** Phase Complete
-**Last activity:** 2026-01-22 - Completed 07-03 Presence Panel
+**Phase:** 8 - Mobile Platform (IN PROGRESS)
+**Plan:** 3 of 4 complete
+**Status:** In Progress
+**Last activity:** 2026-01-23 - Completed 08-03 App Lifecycle & Offline Caching
 
 ```
-[##########] Plan 3/3 in Phase 7
-[==================================================================================] Phase 7 of 8
+[#######---] Plan 3/4 in Phase 8
+[===================================================================================] Phase 8 of 8
 ```
 
-**Phase 7 progress:**
-- 07-01: Awareness Foundation - COMPLETE (useAwareness hook, color palette, TLInstancePresence sync)
-- 07-02: Cursor Rendering - COMPLETE (DotCursor, CollaboratorIndicator, TLComponents config)
-- 07-03: Presence Panel - COMPLETE (PresenceSidebar, useFollowMode, useIdleDetection)
+**Phase 8 progress:**
+- 08-01: Capacitor Setup - COMPLETE (platforms, splash screen, platform detection)
+- 08-02: Touch Optimization - IN PROGRESS (parallel execution)
+- 08-03: App Lifecycle & Offline Caching - COMPLETE (lifecycle handlers, offline caching, ConnectionBanner)
+- 08-04: Platform Services - IN PROGRESS (parallel execution)
 
-**Phase 6 (COMPLETE):**
-- 06-01: Asset Store Foundation - COMPLETE
-- 06-02: Image Upload UI - COMPLETE
-- 06-03: Export PNG/PDF - COMPLETE
+**Phase 7 (COMPLETE):**
+- 07-01: Awareness Foundation - COMPLETE
+- 07-02: Cursor Rendering - COMPLETE
+- 07-03: Presence Panel - COMPLETE
 
 **Deferred verification:**
-- Manual testing deferred per user request (Phases 3, 4, 5, 6, and 7 need visual verification)
+- Manual testing deferred per user request (Phases 3, 4, 5, 6, 7, and 8 need visual verification)
 
 ## Performance Metrics
 
 | Metric | Value |
 |--------|-------|
 | Phases completed | 7/8 |
-| Requirements done | 24/27 |
-| Current phase progress | 100% |
-| Plans completed this phase | 3/3 |
+| Requirements done | 25/27 |
+| Current phase progress | 75% |
+| Plans completed this phase | 3/4 |
 
 ## Accumulated Context
 
@@ -120,6 +121,11 @@
 | editor.getInstanceState().followingUserId | tldraw doesn't expose getIsFollowingUser method | 2026-01-22 |
 | 30s cursor fade, 2min idle threshold | Per CONTEXT.md inactivity indicators | 2026-01-22 |
 | 768px mobile breakpoint | Standard responsive sidebar collapse threshold | 2026-01-22 |
+| appStateChange + resume events | Both events for reliable WebSocket reconnection across devices | 2026-01-23 |
+| 10-board cache limit | Balance offline utility with storage constraints | 2026-01-23 |
+| Base64 Y.Doc encoding | Store Uint8Array as base64 in Capacitor Filesystem | 2026-01-23 |
+| 2.5s banner auto-dismiss | Brief success indicator per CONTEXT.md | 2026-01-23 |
+| wasDisconnectedRef pattern | Distinguish reconnection from initial connection | 2026-01-23 |
 
 ### Research Flags
 
@@ -152,35 +158,24 @@ None currently.
 
 ## Session Continuity
 
-**Last session:** 2026-01-22 - Completed 07-03 Presence Panel
-**Next action:** Begin Phase 8 Mobile App
+**Last session:** 2026-01-23 - Completed 08-03 App Lifecycle & Offline Caching
+**Next action:** Complete Phase 8 plans 02 and 04 (parallel execution)
 
 **Context for next session:**
-- Phases 1-7 complete
-- 07-03 Presence Panel complete:
-  - useIdleDetection hook: 30s cursor fade, 2min idle status
-  - useFollowMode hook: tldraw follow API wrapper with state tracking
-  - CollaboratorItem component: Avatar with colored border
-  - PresenceSidebar component: Online count, collaborator list
-  - Canvas integration: Follow/stop-follow, viewport border indicator
-- Frontend collaboration complete:
-  - collaboration/useIdleDetection.ts: Inactivity tracking
-  - collaboration/useFollowMode.ts: Viewport following
-  - collaboration/CollaboratorItem.tsx: User row component
-  - collaboration/PresenceSidebar.tsx: Sidebar with toggle
-  - collaboration/DotCursor.tsx: Custom cursor
-  - collaboration/CollaboratorIndicator.tsx: Selection indicator
-  - collaboration/useAwareness.ts: Core awareness hook
-  - Canvas.tsx: Full collaboration integration
+- Phase 8 in progress (3/4 plans complete for 08-03)
+- 08-03 App Lifecycle & Offline Caching complete:
+  - lifecycle.ts: App state change and resume listeners for WebSocket reconnection
+  - offline.ts: Board caching service with 10-board LRU limit
+  - ConnectionBanner.tsx: Warning/success banners for connection status
+  - Canvas.tsx integration: Lifecycle init/cleanup, banner rendering
 - Key patterns established:
-  - Follow mode via startFollowingUser/stopFollowingUser
-  - Colored viewport border for active following
-  - Responsive sidebar: collapsed mobile, open desktop
-  - Idle detection with timer-based callbacks
-- Manual testing deferred: Phases 3-7 need visual verification
-- Next: Phase 8 Mobile App with Capacitor
+  - initAppLifecycle(provider) in useEffect with cleanupAppLifecycle cleanup
+  - Base64 encoding for Uint8Array Y.Doc state storage
+  - wasDisconnectedRef pattern for reconnection detection
+- Plans 08-02 and 08-04 executing in parallel
+- Manual testing deferred: Phases 3-8 need visual verification
 
 ---
 
 *State initialized: 2026-01-19*
-*Last updated: 2026-01-22 after 07-03 completion*
+*Last updated: 2026-01-23 after 08-03 completion*
