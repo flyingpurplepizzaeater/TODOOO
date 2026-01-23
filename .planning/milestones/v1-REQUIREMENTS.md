@@ -1,3 +1,13 @@
+# Requirements Archive: v1 CollabBoard MVP
+
+**Archived:** 2026-01-23
+**Status:** SHIPPED
+
+This is the archived requirements specification for v1.
+For current requirements, see `.planning/REQUIREMENTS.md` (created for next milestone).
+
+---
+
 # Requirements: CollabBoard
 
 **Defined:** 2026-01-19
@@ -134,9 +144,19 @@ Explicitly excluded from this project:
 
 **Coverage:**
 - v1 requirements: 27 total
-- Mapped to phases: 27
-- Unmapped: 0
+- Shipped: 27
+- Adjusted: 0
+- Dropped: 0
 
 ---
-*Requirements defined: 2026-01-19*
-*Last updated: 2026-01-23 after Phase 8 completion*
+
+## Milestone Summary
+
+**Shipped:** 27 of 27 v1 requirements
+**Adjusted:** None
+**Dropped:** None
+
+All requirements were implemented as specified. No scope changes during milestone.
+
+---
+*Archived: 2026-01-23 as part of v1 milestone completion*
