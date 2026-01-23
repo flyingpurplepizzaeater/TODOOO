@@ -9,6 +9,7 @@ import {
 } from './framePresets'
 import { handleFileUpload } from './fileHandling/useImageUpload'
 import { ExportDialog } from './fileHandling/ExportDialog'
+import { isNativePlatform } from '../../capacitor/platform'
 
 /**
  * Custom toolbar positioned at bottom-center with auto-hide functionality.
@@ -168,6 +169,36 @@ export function CustomToolbar() {
       >
         Image
       </button>
+
+      {/* Camera button - mobile native only */}
+      {isNativePlatform() && (
+        <button
+          onClick={() => {
+            // Dispatch custom event for camera capture (handled in Canvas.tsx)
+            window.dispatchEvent(new CustomEvent('toolbar-camera-capture'));
+          }}
+          title="Take Photo"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 32,
+            height: 32,
+            border: 'none',
+            borderRadius: 6,
+            background: 'rgba(255, 255, 255, 0.9)',
+            cursor: 'pointer',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+            color: '#444',
+          }}
+        >
+          {/* Camera icon SVG */}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </button>
+      )}
 
       {/* Frame preset dropdown */}
       <div ref={frameMenuRef} style={{ position: 'relative' }}>

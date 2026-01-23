@@ -45,5 +45,13 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>TODOOO needs camera access to add photos to your boards</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>TODOOO needs photo library access to add images to your boards</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>TODOOO needs permission to save exported images</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>
