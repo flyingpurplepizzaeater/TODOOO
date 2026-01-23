@@ -9,7 +9,6 @@
  */
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import type { Editor } from 'tldraw';
-import { isNativePlatform } from './platform';
 
 /**
  * Capture a photo and add it to the tldraw canvas.
@@ -96,11 +95,17 @@ export async function capturePhotoToCanvas(
 
 /**
  * Check camera permission status.
+ * Normalizes Capacitor's 'prompt-with-rationale' to 'prompt'.
  */
 export async function checkCameraPermission(): Promise<'granted' | 'denied' | 'prompt'> {
   try {
     const result = await Camera.checkPermissions();
-    return result.camera;
+    const status = result.camera;
+    if (status === 'granted' || status === 'denied' || status === 'prompt') {
+      return status;
+    }
+    // 'prompt-with-rationale' or other states map to 'prompt'
+    return 'prompt';
   } catch {
     return 'prompt';
   }

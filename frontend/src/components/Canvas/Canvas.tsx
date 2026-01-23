@@ -15,6 +15,9 @@ import { createAssetStore } from './fileHandling/useAssetStore'
 import { isTouchDevice, isMobileViewport } from './touchConfig'
 import { ConnectionBanner } from './ConnectionBanner'
 import { initAppLifecycle, cleanupAppLifecycle } from '../../capacitor/lifecycle'
+import { isNativePlatform } from '../../capacitor/platform'
+import { capturePhotoToCanvas } from '../../capacitor/camera'
+import { notifyCollaboratorJoined, notifyCollaboratorLeft } from '../../capacitor/notifications'
 
 // Custom shape utils and tools - defined OUTSIDE component to prevent recreation
 const customShapeUtils = [TodoShapeUtil]
@@ -193,6 +196,92 @@ export function Canvas({ boardId, token, defaultListId }: CanvasProps) {
       cleanupAppLifecycle()
     }
   }, [provider])
+
+  // Listen for camera capture event from toolbar button (mobile only)
+  useEffect(() => {
+    if (!isNativePlatform()) return;
+
+    const handleCameraCapture = async () => {
+      if (!editorRef.current || !boardId || !token) return;
+
+      const success = await capturePhotoToCanvas(
+        editorRef.current,
+        boardId,
+        token,
+        async (file, bId, tk) => {
+          // Upload image to asset storage
+          try {
+            const formData = new FormData();
+            formData.append('file', file);
+            const response = await fetch(`/api/boards/${bId}/assets`, {
+              method: 'POST',
+              headers: { Authorization: `Bearer ${tk}` },
+              body: formData,
+            });
+            if (!response.ok) return null;
+            const data = await response.json();
+            return data.url;
+          } catch {
+            return null;
+          }
+        }
+      );
+
+      if (success) {
+        console.log('[Canvas] Camera photo added successfully');
+      }
+    };
+
+    window.addEventListener('toolbar-camera-capture', handleCameraCapture);
+    return () => {
+      window.removeEventListener('toolbar-camera-capture', handleCameraCapture);
+    };
+  }, [boardId, token]);
+
+  // Collaborator activity notifications (mobile native only)
+  // Triggers local notification when users join/leave the board
+  useEffect(() => {
+    if (!isNativePlatform() || !provider?.awareness) return;
+
+    // Track known users to detect joins/leaves
+    const knownUsers = new Map<number, string>(); // clientId -> userName
+
+    const handleAwarenessUpdate = () => {
+      const states = provider.awareness.getStates();
+      const currentUsers = new Map<number, string>();
+
+      // Check each connected user
+      states.forEach((state, clientId) => {
+        if (clientId === provider.awareness.clientID) return; // Skip self
+
+        const user = state.user as { name?: string } | undefined;
+        const userName = user?.name || 'Someone';
+        currentUsers.set(clientId, userName);
+
+        // New user joined
+        if (!knownUsers.has(clientId)) {
+          notifyCollaboratorJoined(userName);
+        }
+      });
+
+      // Check for users who left
+      knownUsers.forEach((userName, clientId) => {
+        if (!currentUsers.has(clientId)) {
+          notifyCollaboratorLeft(userName);
+        }
+      });
+
+      // Update known users
+      knownUsers.clear();
+      currentUsers.forEach((name, id) => knownUsers.set(id, name));
+    };
+
+    provider.awareness.on('update', handleAwarenessUpdate);
+
+    return () => {
+      provider.awareness.off('update', handleAwarenessUpdate);
+    };
+  }, [provider]);
 
   // Handle follow user action from presence sidebar
   const handleFollowUser = useCallback((userId: string, userName: string, color: string) => {

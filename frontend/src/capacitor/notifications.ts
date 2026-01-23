@@ -187,13 +187,19 @@ export async function notifyCollaboratorLeft(
 
 /**
  * Check notification permission status.
+ * Normalizes Capacitor's 'prompt-with-rationale' to 'prompt'.
  */
 export async function checkNotificationPermission(): Promise<'granted' | 'denied' | 'prompt'> {
   if (!isNativePlatform()) return 'denied';
 
   try {
     const result = await LocalNotifications.checkPermissions();
-    return result.display;
+    const status = result.display;
+    if (status === 'granted' || status === 'denied' || status === 'prompt') {
+      return status;
+    }
+    // 'prompt-with-rationale' or other states map to 'prompt'
+    return 'prompt';
   } catch {
     return 'prompt';
   }
