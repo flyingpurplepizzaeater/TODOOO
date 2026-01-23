@@ -75,7 +75,7 @@ let currentListId = null;
 let ws = null;
 
 async function loadTeam() {
-    const res = await fetch(`/teams/${teamId}`, {
+    const res = await fetch(`/api/v1/teams/${teamId}`, {
         headers: {'Authorization': `Bearer ${token}`}
     });
     if (!res.ok) {
@@ -88,7 +88,7 @@ async function loadTeam() {
 }
 
 async function loadLists() {
-    const res = await fetch(`/teams/${teamId}/lists`, {
+    const res = await fetch(`/api/v1/teams/${teamId}/lists`, {
         headers: {'Authorization': `Bearer ${token}`}
     });
     const lists = await res.json();
@@ -104,7 +104,7 @@ async function loadLists() {
 
 async function loadTodos() {
     if (!currentListId) return;
-    const res = await fetch(`/lists/${currentListId}/todos`, {
+    const res = await fetch(`/api/v1/lists/${currentListId}/todos`, {
         headers: {'Authorization': `Bearer ${token}`}
     });
     const todos = await res.json();
@@ -133,7 +133,7 @@ function selectList(listId, listName) {
 async function createList() {
     const name = prompt('List name:');
     if (!name) return;
-    await fetch(`/teams/${teamId}/lists`, {
+    const res = await fetch(`/api/v1/teams/${teamId}/lists`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -141,36 +141,54 @@ async function createList() {
         },
         body: JSON.stringify({name})
     });
-    loadLists();
+    if (res.ok) {
+        toast.success('List created');
+        loadLists();
+    } else {
+        toast.error('Failed to create list');
+    }
 }
 
 async function deleteList(listId) {
     if (!confirm('Delete this list?')) return;
-    await fetch(`/lists/${listId}`, {
+    const res = await fetch(`/api/v1/lists/${listId}`, {
         method: 'DELETE',
         headers: {'Authorization': `Bearer ${token}`}
     });
-    if (currentListId === listId) {
-        currentListId = null;
-        document.getElementById('current-list-name').textContent = 'Select a list';
-        document.getElementById('add-todo-btn').style.display = 'none';
-        document.getElementById('todos-container').innerHTML = '';
+    if (res.ok) {
+        toast.success('List deleted');
+        if (currentListId === listId) {
+            currentListId = null;
+            document.getElementById('current-list-name').textContent = 'Select a list';
+            document.getElementById('add-todo-btn').style.display = 'none';
+            document.getElementById('todos-container').innerHTML = '';
+        }
+        loadLists();
+    } else {
+        toast.error('Failed to delete list');
     }
-    loadLists();
 }
 
 async function toggleTodo(todoId) {
-    await fetch(`/todos/${todoId}/toggle`, {
+    const res = await fetch(`/api/v1/todos/${todoId}/toggle`, {
         method: 'PATCH',
         headers: {'Authorization': `Bearer ${token}`}
     });
+    if (!res.ok) {
+        toast.error('Failed to update todo');
+    }
 }
 
 async function deleteTodo(todoId) {
-    await fetch(`/todos/${todoId}`, {
+    const res = await fetch(`/api/v1/todos/${todoId}`, {
         method: 'DELETE',
         headers: {'Authorization': `Bearer ${token}`}
     });
+    if (res.ok) {
+        toast.success('Todo deleted');
+    } else {
+        toast.error('Failed to delete todo');
+    }
 }
 
 function showInviteModal() {
@@ -190,7 +208,7 @@ document.getElementById('add-todo-form').addEventListener('submit', async (e) =>
     const title = document.getElementById('todo-title').value;
     const due = document.getElementById('todo-due').value;
 
-    await fetch(`/lists/${currentListId}/todos`, {
+    const res = await fetch(`/api/v1/lists/${currentListId}/todos`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -202,9 +220,15 @@ document.getElementById('add-todo-form').addEventListener('submit', async (e) =>
         })
     });
 
-    document.getElementById('todo-title').value = '';
-    document.getElementById('todo-due').value = '';
-    hideModals();
+    if (res.ok) {
+        toast.success('Todo added');
+        document.getElementById('todo-title').value = '';
+        document.getElementById('todo-due').value = '';
+        hideModals();
+        loadTodos();
+    } else {
+        toast.error('Failed to add todo');
+    }
 });
 
 // WebSocket connection
@@ -245,5 +269,137 @@ function connectWebSocket() {
 loadTeam();
 loadLists();
 connectWebSocket();
+
+// Keyboard Shortcuts
+let selectedTodoIndex = -1;
+let todoItems = [];
+
+function updateTodoSelection() {
+    todoItems = document.querySelectorAll('.todo-item');
+    todoItems.forEach((item, i) => {
+        item.classList.toggle('selected', i === selectedTodoIndex);
+    });
+}
+
+function getSelectedTodoId() {
+    if (selectedTodoIndex >= 0 && selectedTodoIndex < todoItems.length) {
+        const checkbox = todoItems[selectedTodoIndex].querySelector('input[type="checkbox"]');
+        const onchange = checkbox.getAttribute('onchange');
+        const match = onchange.match(/toggleTodo\((\d+)\)/);
+        return match ? parseInt(match[1]) : null;
+    }
+    return null;
+}
+
+document.addEventListener('keydown', (e) => {
+    // Skip if typing in an input
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        if (e.key === 'Escape') {
+            e.target.blur();
+            hideModals();
+        }
+        return;
+    }
+
+    // Skip if modal is open (except Escape)
+    const modalOpen = document.querySelector('.modal.active');
+    if (modalOpen && e.key !== 'Escape') return;
+
+    switch (e.key.toLowerCase()) {
+        case 'n':
+            // New todo
+            if (currentListId) {
+                showAddTodoModal();
+                setTimeout(() => document.getElementById('todo-title').focus(), 100);
+            } else {
+                toast.info('Select a list first');
+            }
+            e.preventDefault();
+            break;
+
+        case 'd':
+            // Mark done (toggle selected)
+            const todoId = getSelectedTodoId();
+            if (todoId) {
+                toggleTodo(todoId);
+                loadTodos();
+            } else {
+                toast.info('Select a todo with arrow keys first');
+            }
+            e.preventDefault();
+            break;
+
+        case 'escape':
+            hideModals();
+            selectedTodoIndex = -1;
+            updateTodoSelection();
+            break;
+
+        case '/':
+            // Focus search (for future search feature)
+            toast.info('Search coming soon!');
+            e.preventDefault();
+            break;
+
+        case '?':
+            // Show shortcuts help
+            toast.info('Shortcuts: n=New, d=Done, Esc=Close, arrows=Navigate', 5000);
+            e.preventDefault();
+            break;
+
+        case 'arrowdown':
+            todoItems = document.querySelectorAll('.todo-item');
+            if (todoItems.length > 0) {
+                selectedTodoIndex = Math.min(selectedTodoIndex + 1, todoItems.length - 1);
+                updateTodoSelection();
+                todoItems[selectedTodoIndex].scrollIntoView({ block: 'nearest' });
+            }
+            e.preventDefault();
+            break;
+
+        case 'arrowup':
+            todoItems = document.querySelectorAll('.todo-item');
+            if (todoItems.length > 0) {
+                selectedTodoIndex = Math.max(selectedTodoIndex - 1, 0);
+                updateTodoSelection();
+                todoItems[selectedTodoIndex].scrollIntoView({ block: 'nearest' });
+            }
+            e.preventDefault();
+            break;
+
+        case 'enter':
+            // Toggle selected todo
+            const id = getSelectedTodoId();
+            if (id) {
+                toggleTodo(id);
+                loadTodos();
+            }
+            e.preventDefault();
+            break;
+
+        case 'delete':
+        case 'backspace':
+            // Delete selected todo
+            const delId = getSelectedTodoId();
+            if (delId && !e.target.closest('input')) {
+                deleteTodo(delId);
+                selectedTodoIndex = Math.max(0, selectedTodoIndex - 1);
+                setTimeout(() => {
+                    loadTodos();
+                    updateTodoSelection();
+                }, 100);
+            }
+            e.preventDefault();
+            break;
+    }
+});
+
+// Reset selection when todos reload
+const origLoadTodos = loadTodos;
+loadTodos = async function() {
+    await origLoadTodos();
+    selectedTodoIndex = -1;
+    todoItems = document.querySelectorAll('.todo-item');
+};
 </script>
 {% endblock %}

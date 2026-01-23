@@ -1,3 +1,30 @@
+/* CSS Variables for theming */
+:root {
+    --bg-primary: #f5f5f5;
+    --bg-secondary: white;
+    --bg-navbar: #1a1a2e;
+    --text-primary: #333;
+    --text-secondary: #666;
+    --text-muted: #888;
+    --border-color: #ddd;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --accent: #3498db;
+    --accent-hover: #2980b9;
+}
+
+[data-theme="dark"] {
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #16213e;
+    --bg-navbar: #0f0f23;
+    --text-primary: #e8e8e8;
+    --text-secondary: #aaa;
+    --text-muted: #777;
+    --border-color: #333;
+    --shadow: rgba(0, 0, 0, 0.3);
+    --accent: #3498db;
+    --accent-hover: #5dade2;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,12 +33,14 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #f5f5f5;
+    background: var(--bg-primary);
+    color: var(--text-primary);
     min-height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .navbar {
-    background: #1a1a2e;
+    background: var(--bg-navbar);
     color: white;
     padding: 1rem 2rem;
     display: flex;
@@ -47,10 +76,10 @@ body {
 .auth-container {
     max-width: 400px;
     margin: 4rem auto;
-    background: white;
+    background: var(--bg-secondary);
     padding: 2rem;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px var(--shadow);
 }
 
 .auth-form .form-group {
@@ -66,9 +95,11 @@ body {
 .auth-form input {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     font-size: 1rem;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
 }
 
 .error-message {
@@ -89,12 +120,12 @@ body {
 }
 
 .btn-primary {
-    background: #3498db;
+    background: var(--accent);
     color: white;
 }
 
 .btn-primary:hover {
-    background: #2980b9;
+    background: var(--accent-hover);
 }
 
 .btn-secondary {
@@ -136,12 +167,12 @@ body {
 }
 
 .team-card {
-    background: white;
+    background: var(--bg-secondary);
     padding: 1.5rem;
     border-radius: 8px;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
+    box-shadow: 0 2px 5px var(--shadow);
+    transition: transform 0.2s, background-color 0.3s;
 }
 
 .team-card:hover {
@@ -149,7 +180,7 @@ body {
 }
 
 .invite-code {
-    color: #888;
+    color: var(--text-muted);
     font-size: 0.875rem;
     margin-top: 0.5rem;
 }
@@ -157,7 +188,7 @@ body {
 .invite-code-large {
     display: block;
     font-size: 1.5rem;
-    background: #f0f0f0;
+    background: var(--bg-primary);
     padding: 1rem;
     border-radius: 4px;
     margin: 1rem 0;
@@ -176,8 +207,8 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
-    background: white;
-    border-bottom: 1px solid #ddd;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .team-actions {
@@ -193,8 +224,8 @@ body {
 
 .lists-sidebar {
     width: 250px;
-    background: white;
-    border-right: 1px solid #ddd;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
     padding: 1rem;
     overflow-y: auto;
 }
@@ -202,7 +233,7 @@ body {
 .lists-sidebar h2 {
     font-size: 1rem;
     margin-bottom: 1rem;
-    color: #666;
+    color: var(--text-secondary);
 }
 
 .lists-sidebar ul {
@@ -219,11 +250,11 @@ body {
 }
 
 .list-item:hover {
-    background: #f0f0f0;
+    background: var(--bg-primary);
 }
 
 .list-item.active {
-    background: #3498db;
+    background: var(--accent);
     color: white;
 }
 
@@ -249,15 +280,21 @@ body {
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    background: white;
+    background: var(--bg-secondary);
     border-radius: 4px;
     margin-bottom: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px var(--shadow);
+    border: 2px solid transparent;
+    transition: border-color 0.15s;
+}
+
+.todo-item.selected {
+    border-color: var(--accent);
 }
 
 .todo-item.completed .todo-title {
     text-decoration: line-through;
-    color: #888;
+    color: var(--text-muted);
 }
 
 .todo-title {
@@ -265,7 +302,7 @@ body {
 }
 
 .assignee {
-    color: #3498db;
+    color: var(--accent);
     font-size: 0.875rem;
 }
 
@@ -275,8 +312,8 @@ body {
 }
 
 .online-bar {
-    background: #1a1a2e;
-    color: #aaa;
+    background: var(--bg-navbar);
+    color: var(--text-secondary);
     padding: 0.5rem 2rem;
     font-size: 0.875rem;
 }
@@ -299,7 +336,7 @@ body {
 }
 
 .modal-content {
-    background: white;
+    background: var(--bg-secondary);
     padding: 2rem;
     border-radius: 8px;
     min-width: 400px;
@@ -328,12 +365,109 @@ body {
 .form-group input {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
 }
 
 .empty {
-    color: #888;
+    color: var(--text-muted);
     text-align: center;
     padding: 2rem;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--text-secondary);
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.theme-toggle:hover {
+    border-color: white;
+    color: white;
+}
+
+/* Toast Notifications */
+.toast-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.toast {
+    padding: 1rem 1.5rem;
+    border-radius: 4px;
+    color: white;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: toast-slide-in 0.3s ease-out;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 350px;
+}
+
+.toast.success {
+    background: #27ae60;
+}
+
+.toast.error {
+    background: #e74c3c;
+}
+
+.toast.info {
+    background: #3498db;
+}
+
+.toast.warning {
+    background: #f39c12;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.2rem;
+    opacity: 0.7;
+    margin-left: auto;
+    padding: 0;
+}
+
+.toast-close:hover {
+    opacity: 1;
+}
+
+@keyframes toast-slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes toast-fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
 }

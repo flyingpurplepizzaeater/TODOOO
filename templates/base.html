@@ -10,6 +10,9 @@
     <nav class="navbar">
         <a href="/dashboard" class="logo">TODO App</a>
         <div class="nav-links">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+                <span id="theme-icon">&#9790;</span>
+            </button>
             {% if user %}
             <span>{{ user.username }}</span>
             <a href="#" onclick="logout()">Logout</a>
@@ -25,6 +28,14 @@
         localStorage.removeItem('token');
         window.location.href = '/login';
     }
+    function toggleTheme() {
+        const next = theme.toggle();
+        document.getElementById('theme-icon').innerHTML = next === 'dark' ? '&#9788;' : '&#9790;';
+    }
+    // Update icon on load
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('theme-icon').innerHTML = theme.isDark() ? '&#9788;' : '&#9790;';
+    });
     </script>
     {% block scripts %}{% endblock %}
 </body>

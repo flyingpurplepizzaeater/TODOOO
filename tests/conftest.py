@@ -43,9 +43,9 @@ async def test_db():
 
 @pytest_asyncio.fixture
 async def client(test_db):
-    """Async HTTP client for testing."""
+    """Async HTTP client for testing API v1 endpoints."""
     transport = ASGITransport(app=app)
-    async with AsyncClient(transport=transport, base_url="http://test") as ac:
+    async with AsyncClient(transport=transport, base_url="http://test/api/v1") as ac:
         yield ac
 
 @pytest_asyncio.fixture

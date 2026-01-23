@@ -35,12 +35,13 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# Include API routers
-app.include_router(auth.router)
-app.include_router(teams.router)
-app.include_router(lists.router)
-app.include_router(todos.router)
-app.include_router(boards.router)
+# Include API routers under /api/v1 prefix
+API_V1_PREFIX = "/api/v1"
+app.include_router(auth.router, prefix=API_V1_PREFIX)
+app.include_router(teams.router, prefix=API_V1_PREFIX)
+app.include_router(lists.router, prefix=API_V1_PREFIX)
+app.include_router(todos.router, prefix=API_V1_PREFIX)
+app.include_router(boards.router, prefix=API_V1_PREFIX)
 
 # Page routes
 @app.get("/")

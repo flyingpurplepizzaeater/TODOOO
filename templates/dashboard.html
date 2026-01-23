@@ -60,7 +60,7 @@ function escapeHtml(text) {
 }
 
 async function loadTeams() {
-    const res = await fetch('/teams', {
+    const res = await fetch('/api/v1/teams', {
         headers: {'Authorization': `Bearer ${token}`}
     });
     if (res.status === 401) {
@@ -93,7 +93,7 @@ function hideModals() {
 document.getElementById('create-team-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('team-name').value;
-    await fetch('/teams', {
+    await fetch('/api/v1/teams', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -108,7 +108,7 @@ document.getElementById('create-team-form').addEventListener('submit', async (e)
 document.getElementById('join-team-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const invite_code = document.getElementById('invite-code').value;
-    const res = await fetch('/teams/join', {
+    const res = await fetch('/api/v1/teams/join', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -119,8 +119,9 @@ document.getElementById('join-team-form').addEventListener('submit', async (e) =
     if (res.ok) {
         hideModals();
         loadTeams();
+        toast.success('Successfully joined team!');
     } else {
-        alert('Invalid invite code');
+        toast.error('Invalid invite code');
     }
 });
 
