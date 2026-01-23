@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Tldraw, Editor, type TLComponents } from 'tldraw'
 import * as Y from 'yjs'
 import 'tldraw/tldraw.css'
@@ -12,6 +12,9 @@ import { toolbarComponents } from './CustomToolbar'
 import { restoreNoteColor, createNoteColorListener } from './noteColorPersistence'
 import { TodoShapeUtil, TodoTool } from './shapes/todo'
 import { createAssetStore } from './fileHandling/useAssetStore'
+import { isTouchDevice, isMobileViewport } from './touchConfig'
+import { ConnectionBanner } from './ConnectionBanner'
+import { initAppLifecycle, cleanupAppLifecycle } from '../../capacitor/lifecycle'
 
 // Custom shape utils and tools - defined OUTSIDE component to prevent recreation
 const customShapeUtils = [TodoShapeUtil]
@@ -153,6 +156,21 @@ export function Canvas({ boardId, token, defaultListId }: CanvasProps) {
     name: 'Anonymous User'
   }), [])
 
+  // Detect if we should force mobile UI layout
+  // Forces mobile toolbar and touch-optimized interactions
+  const shouldForceMobile = useMemo(() => {
+    // Check for Capacitor native platform
+    try {
+      // Dynamic import to avoid build errors when Capacitor not installed
+      const Capacitor = (window as unknown as { Capacitor?: { isNativePlatform: () => boolean } }).Capacitor;
+      if (Capacitor?.isNativePlatform()) return true;
+    } catch {
+      // Capacitor not available
+    }
+    // Force mobile UI on touch devices with mobile viewport
+    return isTouchDevice() && isMobileViewport();
+  }, []);
+
   // Enable TODO sync to backend when editor is ready and listId is provided
   useTodoSync(editor, token, defaultListId ?? null)
 
@@ -165,6 +183,16 @@ export function Canvas({ boardId, token, defaultListId }: CanvasProps) {
 
   // Enable follow mode for following other users' viewports
   const followMode = useFollowMode(editor)
+
+  // Initialize app lifecycle handlers for WebSocket reconnection (mobile)
+  useEffect(() => {
+    if (provider) {
+      initAppLifecycle(provider)
+    }
+    return () => {
+      cleanupAppLifecycle()
+    }
+  }, [provider])
 
   // Handle follow user action from presence sidebar
   const handleFollowUser = useCallback((userId: string, userName: string, color: string) => {
@@ -228,6 +256,7 @@ export function Canvas({ boardId, token, defaultListId }: CanvasProps) {
       onMouseLeave={handleMouseLeave}
     >
       <ConnectionIndicator status={status} />
+      <ConnectionBanner status={status} />
       <UndoRedoIndicator canUndo={canUndo} canRedo={canRedo} />
       <PresenceSidebar
         others={others}
@@ -243,6 +272,7 @@ export function Canvas({ boardId, token, defaultListId }: CanvasProps) {
         overrides={overrides}
         components={canvasComponents}
         onMount={handleMount}
+        forceMobile={shouldForceMobile}
         autoFocus
       />
     </div>
