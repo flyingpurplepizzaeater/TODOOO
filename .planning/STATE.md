@@ -11,12 +11,12 @@
 ## Current Position
 
 **Phase:** 8 - Mobile Platform (IN PROGRESS)
-**Plan:** 3 of 4 complete
-**Status:** In Progress
-**Last activity:** 2026-01-23 - Completed 08-03 App Lifecycle & Offline Caching
+**Plan:** 4 of 4 complete
+**Status:** Phase Complete (pending 08-02)
+**Last activity:** 2026-01-23 - Completed 08-04 Native Features
 
 ```
-[#######---] Plan 3/4 in Phase 8
+[##########] Plan 4/4 in Phase 8
 [===================================================================================] Phase 8 of 8
 ```
 
@@ -24,7 +24,7 @@
 - 08-01: Capacitor Setup - COMPLETE (platforms, splash screen, platform detection)
 - 08-02: Touch Optimization - IN PROGRESS (parallel execution)
 - 08-03: App Lifecycle & Offline Caching - COMPLETE (lifecycle handlers, offline caching, ConnectionBanner)
-- 08-04: Platform Services - IN PROGRESS (parallel execution)
+- 08-04: Native Features - COMPLETE (camera, notifications, exports, permissions)
 
 **Phase 7 (COMPLETE):**
 - 07-01: Awareness Foundation - COMPLETE
@@ -126,6 +126,10 @@
 | Base64 Y.Doc encoding | Store Uint8Array as base64 in Capacitor Filesystem | 2026-01-23 |
 | 2.5s banner auto-dismiss | Brief success indicator per CONTEXT.md | 2026-01-23 |
 | wasDisconnectedRef pattern | Distinguish reconnection from initial connection | 2026-01-23 |
+| Custom event dispatch for camera | toolbar-camera-capture event bridges toolbar to Canvas context | 2026-01-23 |
+| Local notifications for collaborator activity | Awareness events trigger local notifications, no push infra needed | 2026-01-23 |
+| Map-based user tracking | Track clientId -> userName to detect joins/leaves with names | 2026-01-23 |
+| 2048px photo resolution limit | Per RESEARCH.md Pitfall 2 about iOS canvas memory limits | 2026-01-23 |
 
 ### Research Flags
 
@@ -158,24 +162,27 @@ None currently.
 
 ## Session Continuity
 
-**Last session:** 2026-01-23 - Completed 08-03 App Lifecycle & Offline Caching
-**Next action:** Complete Phase 8 plans 02 and 04 (parallel execution)
+**Last session:** 2026-01-23 - Completed 08-04 Native Features
+**Next action:** Complete Phase 8 plan 02 (Touch Optimization)
 
 **Context for next session:**
-- Phase 8 in progress (3/4 plans complete for 08-03)
-- 08-03 App Lifecycle & Offline Caching complete:
-  - lifecycle.ts: App state change and resume listeners for WebSocket reconnection
-  - offline.ts: Board caching service with 10-board LRU limit
-  - ConnectionBanner.tsx: Warning/success banners for connection status
-  - Canvas.tsx integration: Lifecycle init/cleanup, banner rendering
+- Phase 8 nearly complete (4/4 plans done except 08-02)
+- 08-04 Native Features complete:
+  - camera.ts: Photo capture with 2048px limit, base64 conversion
+  - notifications.ts: TODO reminders + collaborator join/leave events
+  - exports.ts: Photos app and Files app export with web fallback
+  - iOS Info.plist: Camera, photo library, add photos permissions
+  - Android manifest: Camera, storage, notification, alarm permissions
+  - CustomToolbar.tsx: Camera button (mobile native only)
+  - Canvas.tsx: Event listeners for camera and awareness notifications
 - Key patterns established:
-  - initAppLifecycle(provider) in useEffect with cleanupAppLifecycle cleanup
-  - Base64 encoding for Uint8Array Y.Doc state storage
-  - wasDisconnectedRef pattern for reconnection detection
-- Plans 08-02 and 08-04 executing in parallel
+  - toolbar-camera-capture custom event dispatch
+  - Map-based user tracking for join/leave detection
+  - isNativePlatform() guards on toolbar buttons
+- Plan 08-02 still executing in parallel
 - Manual testing deferred: Phases 3-8 need visual verification
 
 ---
 
 *State initialized: 2026-01-19*
-*Last updated: 2026-01-23 after 08-03 completion*
+*Last updated: 2026-01-23 after 08-04 completion*
