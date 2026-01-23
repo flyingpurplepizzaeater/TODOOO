@@ -223,11 +223,11 @@ Plans:
 **Plans:** 5 plans
 
 Plans:
-- [ ] 08-01-PLAN.md — Capacitor setup (packages, config, iOS/Android platforms)
-- [ ] 08-02-PLAN.md — Touch gesture configuration (pinch zoom, finger draw, stylus support)
-- [ ] 08-03-PLAN.md — App lifecycle and offline caching (WebSocket reconnection, 10-board cache)
-- [ ] 08-04-PLAN.md — Native features (camera capture, notifications, Photos/Files export)
-- [ ] 08-05-PLAN.md — Native builds and verification (icons, splash, TestFlight/APK)
+- [x] 08-01-PLAN.md — Capacitor setup (packages, config, iOS/Android platforms)
+- [x] 08-02-PLAN.md — Touch gesture configuration (pinch zoom, finger draw, stylus support)
+- [x] 08-03-PLAN.md — App lifecycle and offline caching (WebSocket reconnection, 10-board cache)
+- [x] 08-04-PLAN.md — Native features (camera capture, notifications, Photos/Files export)
+- [x] 08-05-PLAN.md — Native builds and verification (icons, splash, TestFlight/APK)
 
 ---
 
@@ -242,7 +242,7 @@ Plans:
 | 5 | TODO Integration | TODO-01, TODO-02, TODO-03, TODO-04 | Complete |
 | 6 | File Handling | FILE-01, FILE-02, FILE-03 | Complete |
 | 7 | Collaboration Polish | SYNC-01, SYNC-02 | Complete |
-| 8 | Mobile Platform | PLAT-02, PLAT-03, PLAT-04 | Planned |
+| 8 | Mobile Platform | PLAT-02, PLAT-03, PLAT-04 | Complete |
 
 **Coverage:** 27/27 requirements mapped
 
@@ -269,4 +269,4 @@ Phase 8: Mobile Platform (depends on 2-6 stable)
 ---
 
 *Roadmap created: 2026-01-19*
-*Last updated: 2026-01-23 after Phase 8 planning*
+*Last updated: 2026-01-23 after Phase 8 completion*

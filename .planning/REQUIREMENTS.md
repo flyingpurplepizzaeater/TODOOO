@@ -49,9 +49,9 @@
 ### Platform
 
 - [x] **PLAT-01**: Web app works responsively on any screen size
-- [ ] **PLAT-02**: iOS native app wrapper via Capacitor
-- [ ] **PLAT-03**: Android native app wrapper via Capacitor
-- [ ] **PLAT-04**: Touch gestures work (pinch zoom, touch draw) on mobile
+- [x] **PLAT-02**: iOS native app wrapper via Capacitor
+- [x] **PLAT-03**: Android native app wrapper via Capacitor
+- [x] **PLAT-04**: Touch gestures work (pinch zoom, touch draw) on mobile
 
 ## Validated (Existing)
 
@@ -128,9 +128,9 @@ Explicitly excluded from this project:
 | FILE-02 | Phase 6 | Complete |
 | FILE-03 | Phase 6 | Complete |
 | PLAT-01 | Phase 2 | Complete |
-| PLAT-02 | Phase 8 | Pending |
-| PLAT-03 | Phase 8 | Pending |
-| PLAT-04 | Phase 8 | Pending |
+| PLAT-02 | Phase 8 | Complete |
+| PLAT-03 | Phase 8 | Complete |
+| PLAT-04 | Phase 8 | Complete |
 
 **Coverage:**
 - v1 requirements: 27 total
@@ -139,4 +139,4 @@ Explicitly excluded from this project:
 
 ---
 *Requirements defined: 2026-01-19*
-*Last updated: 2026-01-22 after Phase 7 completion*
+*Last updated: 2026-01-23 after Phase 8 completion*
